@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>TruffleCourse</name>
-	<comment>Updates /home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/Source/trufflecourse/dists/trufflecourse.jar if a project dependency of TruffleCourse is updated</comment>
+	<comment>Updates /home/davidleopoldseder/Downloads/Source/trufflecourse/dists/trufflecourse.jar if a project dependency of TruffleCourse is updated</comment>
 	<projects>
 		<project>org.truffle.cs.mj</project>
 		<project>org.truffle.cs.samples</project>

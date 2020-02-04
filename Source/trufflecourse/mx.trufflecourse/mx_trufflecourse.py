@@ -20,14 +20,12 @@ def runPlainAST(args=None, out=None, get_classpath_options=getClasspathOptions):
     dists = ["TruffleCourse"]
     return mx.run_java(get_classpath_options(dists) + ["-XX:+EnableJVMCI","-XX:+UseJVMCICompiler"] + 
     args+ ["org.truffle.cs.samples.PlainAST.PlainAST"], out=out,jdk=mx.get_jdk())
-    
+
 def runMJInterpreter(args=None, out=None, get_classpath_options=getClasspathOptions):
     dists = ["TruffleCourse"]
-    return mx.run_java(get_classpath_options(dists) + ["-XX:+EnableJVMCI","-XX:+UseJVMCICompiler", 
-        "-Dgraal.TraceTruffleCompilation=true",
-        "-Dgraal.TruffleBackgroundCompilation=false",
-        "-Dgraal.PrintGraph=Network", "-Dgraal.Dump=Truffle:5"
-    ] + 
+    return mx.run_java(get_classpath_options(dists) + ["-XX:+EnableJVMCI","-XX:+UseJVMCICompiler",
+    "-Dgraal.TraceTruffleCompilation=true", "-Dgraal.TruffleBackgroundCompilation=false",
+    "-Dgraal.PrintGraph=Network", "-Dgraal.Dump=Truffle:5"] + 
     args+ ["org.truffle.cs.mj.main.MJRuntime"], out=out,jdk=mx.get_jdk())
 
 

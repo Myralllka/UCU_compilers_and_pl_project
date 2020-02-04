@@ -23,7 +23,7 @@ public class LiveCoding {
         @Override
         public Object execute(VirtualFrame frame) {
             foo();
-            return null;
+            return 12;
         }
 
         @Override
@@ -35,9 +35,9 @@ public class LiveCoding {
     static void helloWorld() {
         TruffleRuntime runtime = Truffle.getRuntime();
         CallTarget ct = runtime.createCallTarget(new FunctionNode());
-        for (int i = 0; i < 100; i++) {
+        ct.call();
+        for (int i = 0; i < 10000; i++)
             ct.call();
-        }
     }
 
     public static void main(String[] args) {
@@ -47,26 +47,26 @@ public class LiveCoding {
     }
 
     static void expressionExample() {
-        Arg a0 = new Arg(0);
-        Arg a1 = new Arg(1);
-        CallTarget c = Truffle.getRuntime().createCallTarget(
-                        new ExpressionFunction(
-                                        new Add(a0, a1), "Sum of two values"));
-        System.out.print(c.call(new int[]{1, 2}));
-        // ExpressionFunction expressionSample = new ExpressionFunction(new Add(new Add(new Arg(0),
-        // new Arg(1)), new Arg(2)), "simpleAddExpression");
-        // callAndCompile(expressionSample,new int[]{10, 11, 21});
+// Arg a0 = new Arg(0);
+// Arg a1 = new Arg(1);
+
+// CallTarget = Truffel.getRuntime().createCallTarget(new ExpressionFunction(new Add(a0, a1), "sum
+// of values"));
+// System.out.println(c.call(new int[]{1, 2}));
+// ExpressionFunction expressionSample = new ExpressionFunction(new Add(new Add(new Arg(0),
+// new Arg(1)), new Arg(2)), "simpleAddExpression");
+// callAndCompile(expressionSample,new int[]{10, 11, 21});
 
         // ExpressionFunction absSample = new ExpressionFunction(new Abs(new Arg(0)), "simplArg");
         // callAndCompile(absSample, new int[]{10});
         // callAndCompile(absSample, new int[]{-11});
         // callAndCompile(absSample, new int[]{11});
 
-// AssumptionArg arg = new AssumptionArg(new Arg(0));
-// ExpressionFunction absSample = new ExpressionFunction(arg, "simplestAssumption");
-// callAndCompile(absSample, new int[]{10});
-// arg.a.invalidate();
-// callAndCompile(absSample, new int[]{10});
+        AssumptionArg arg = new AssumptionArg(new Arg(0));
+        ExpressionFunction absSample = new ExpressionFunction(arg, "simplestAssumption");
+        callAndCompile(absSample, new int[]{10});
+        arg.a.invalidate();
+        callAndCompile(absSample, new int[]{10});
     }
 
     static void callAndCompile(ExpressionFunction ex, int[] args) {

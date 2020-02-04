@@ -4,17 +4,16 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 public class MJBlock extends MJStatementNode {
+    @Children MJStatementNode[] statemnts;
 
-    @Children MJStatementNode statements[];
-
-    public MJBlock(MJStatementNode[] statements) {
-        this.statements = statements;
+    public MJBlock(MJStatementNode[] statemnts) {
+        this.statemnts = statemnts;
     }
 
     @Override
     @ExplodeLoop
     public Object execute(VirtualFrame frame) {
-        for (MJStatementNode stat : statements) {
+        for (MJStatementNode stat : statemnts) {
             stat.execute(frame);
         }
         return null;

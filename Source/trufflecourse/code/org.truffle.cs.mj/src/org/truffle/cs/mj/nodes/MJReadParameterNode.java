@@ -1,9 +1,7 @@
 package org.truffle.cs.mj.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.NodeInfo;
 
-@NodeInfo
 public class MJReadParameterNode extends MJExpresionNode {
     final int index;
 

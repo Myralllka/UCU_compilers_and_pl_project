@@ -3,8 +3,9 @@ package org.truffle.cs.mj.nodes;
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
-@NodeChild(value = "expresion", type = MJExpresionNode.class)
+@NodeChild(value = "expression", type = MJExpresionNode.class)
 public abstract class MJPrintNode extends MJStatementNode {
 
     @Specialization
@@ -28,5 +29,4 @@ public abstract class MJPrintNode extends MJStatementNode {
     private static void print(Object o) {
         System.out.println(o);
     }
-
 }

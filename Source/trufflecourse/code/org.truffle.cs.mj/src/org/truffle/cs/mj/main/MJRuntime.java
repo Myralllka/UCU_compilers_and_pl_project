@@ -16,19 +16,43 @@ import com.oracle.truffle.api.TruffleRuntime;
 public class MJRuntime {
 
     public static void main(String[] args) {
+// parseRD(mjSimpleRD);
 // parseRD(mjProgramRD);
-// parseRD(whileLoopRD);
+// parseRD(mjSimpletIfRD);
+// parseRD(mjSimpletWhileRD);
+        parseRD(whileLoopRD);
 // parseRD(ifProgram);
 // parseRDBenchmark(divAlgorithm);
-        parseRD(whileLoopRD);
     }
 
-    static String simplestProgram = ""//
-                    + "program Empty { "//
-                    + "     void main(int i) int p; {\n"//
-                    + "         p=i+1;\n"//
-                    + "         print(p);\n"//
+    static String mjSimpleRD = ""//
+                    + "program Sample { "//
+                    + " void main(int i) int p; {\n"//
+                    + "     p=i+1;\n"//
+                    + "     print(p);\n"//
+                    + " }\n"//
+                    + "}";
+
+    static String mjSimpletIfRD = ""//
+                    + "program Sample { "//
+                    + " void main(int i) {\n"//
+                    + "     if(i==0 || i > 5000){\n"//
+                    + "         print(0);\n"//
+                    + "     } else {\n"//
+                    + "         print(1);\n"//
                     + "     }\n"//
+                    + " }\n"//
+                    + "}";
+    static String mjSimpletWhileRD = ""//
+                    + "program Sample { "//
+                    + " void main(int i) int p; {\n"//
+                    + "     p = 0;\n"//
+                    + "     while(p < i){\n"//
+// + " print(p);\n"//
+                    + "         p = p + 1;\n"//
+                    + "     }\n"//
+                    + "     return p;\n"//
+                    + " }\n"//
                     + "}";
 
     static String mjProgramRD = ""//
@@ -122,8 +146,9 @@ public class MJRuntime {
         TruffleRuntime runtime = Truffle.getRuntime();
         System.out.println("Calling main function...");
         CallTarget callTarget = runtime.createCallTarget(parser.getMain());
-        for (int i = 0; i < 1000; i++) {
-            System.out.println(callTarget.call(i));
+        for (int i = 0; i < 10000; i++) {
+// System.out.println(callTarget.call(i));
+            callTarget.call(i);
         }
     }
 

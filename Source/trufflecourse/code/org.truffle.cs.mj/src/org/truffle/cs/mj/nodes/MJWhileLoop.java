@@ -3,7 +3,6 @@ package org.truffle.cs.mj.nodes;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 public class MJWhileLoop extends MJStatementNode {
-
     @Child MJExpresionNode condition;
     @Child MJStatementNode loopBody;
 
@@ -19,4 +18,5 @@ public class MJWhileLoop extends MJStatementNode {
         }
         return null;
     }
+
 }

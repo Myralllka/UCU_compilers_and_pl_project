@@ -16,24 +16,17 @@ public abstract class MJExpresionNode extends Node {
             return (int) result;
         }
         CompilerDirectives.transferToInterpreter();
-        throw new Error("type mismatch");
+        throw new Error("type missmatch");
     }
 
     public boolean executeBool(VirtualFrame frame) {
         Object result = executeGeneric(frame);
-        if (result instanceof Integer) {
+        if (result instanceof Boolean) {
             return (boolean) result;
         }
         CompilerDirectives.transferToInterpreter();
-        throw new Error("type mismatch");
+        throw new Error("type missmatch");
     }
-// public float executeF32(VirtualFrame frame) {
-// Object result = executeGeneric(frame);
-// if (result instanceof Integer) {
-// return (float) result;
-// }
-// CompilerDirectives.transferToInterpreter();
-// throw new Error("type mismatch");
-// }
 
+// public abstract int executeF32(VirtualFrame frame);
 }

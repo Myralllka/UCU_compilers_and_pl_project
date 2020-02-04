@@ -11,11 +11,11 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 public class MJVariableNode {
 
     @NodeField(name = "slot", type = FrameSlot.class)
-    public static abstract class MJReadLocalVariableNode extends MJExpresionNode {
+    public abstract static class MJReadLocalVariableNode extends MJExpresionNode {
         protected abstract FrameSlot getSlot();
 
         @Specialization
-        public Object readVariable(VirtualFrame frame) {
+        public Object readVariableNode(VirtualFrame frame) {
             try {
                 return frame.getObject(getSlot());
             } catch (FrameSlotTypeException e) {
@@ -27,15 +27,13 @@ public class MJVariableNode {
 
     @NodeChild(value = "value", type = MJExpresionNode.class)
     @NodeField(name = "slot", type = FrameSlot.class)
-    public static abstract class MJWriteLocalVariableNode extends MJStatementNode {
-
+    public abstract static class MJWriteLocalVariableNode extends MJStatementNode {
         protected abstract FrameSlot getSlot();
 
         @Specialization
-        public Object execute(VirtualFrame frame, Object value) {
+        public Object excute(VirtualFrame frame, Object value) {
             frame.setObject(getSlot(), value);
             return null;
         }
-
     }
 }

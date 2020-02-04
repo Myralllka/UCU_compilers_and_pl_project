@@ -29,7 +29,7 @@ public final class MJVariableNodeFactory {
 
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
-            return readVariable(frameValue);
+            return readVariableNode(frameValue);
         }
 
         @Override
@@ -71,7 +71,7 @@ public final class MJVariableNodeFactory {
         @Override
         public Object execute(VirtualFrame frameValue) {
             Object valueValue_ = this.value_.executeGeneric(frameValue);
-            return execute(frameValue, valueValue_);
+            return excute(frameValue, valueValue_);
         }
 
         @Override

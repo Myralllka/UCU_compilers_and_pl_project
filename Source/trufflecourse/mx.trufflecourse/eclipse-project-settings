@@ -1,5 +1,5 @@
 logToConsole=False
 absolutePaths=False
 EXTRA_JAVA_HOMES=None
-PATH=/opt/ros/melodic/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/opt/intel/mediasdk/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/opt/intel/mediasdk/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
-JAVA_HOME=../openjdk1.8.0_232-jvmci-19.3-b06
+PATH=/opt/ros/melodic/bin:/opt/jython/bin/:/usr/local/bin:/usr/local/sbin:/usr/bin:/opt/android-sdk/platform-tools:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+JAVA_HOME=../../openjdk1.8.0_232-jvmci-19.3-b06

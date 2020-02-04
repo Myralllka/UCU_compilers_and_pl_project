@@ -98,12 +98,13 @@ public class SimplestPEA {
     }
 
     public static void main(String[] args) {
-        ConstantNode c = SimplestPEAFactory.ConstantNodeGen.create(13);
+        ConstantNode c = SimplestPEAFactory.ConstantNodeGen.create(42);
         NegateNode negate = SimplestPEAFactory.NegateNodeGen.create(c);
         AddNode add = SimplestPEAFactory.AddNodeGen.create(negate, negate);
         PrintNode print = SimplestPEAFactory.PrintNodeGen.create(add);
         TruffleRuntime rt = Truffle.getRuntime();
         CallTarget t = rt.createCallTarget(new ExpressionAST(print));
+        t.call();
         t.call();
     }
 }

@@ -1,6 +1,6 @@
 MAX_RECENT_WORKSPACES=10
-RECENT_WORKSPACES=/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/IDE/ws\n/home/myralllka/Documents/Compilers
+RECENT_WORKSPACES=/home/fenix/Downloads/the_compiler_and_pl/IDE/ws\n/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/IDE/ws\n/home/myralllka/Documents/Compilers
 RECENT_WORKSPACES_PROTOCOL=3
 SHOW_RECENT_WORKSPACES=false
-SHOW_WORKSPACE_SELECTION_DIALOG=true
+SHOW_WORKSPACE_SELECTION_DIALOG=false
 eclipse.preferences.version=1

@@ -12,11 +12,11 @@ import org.truffle.cs.mj.nodes.MJPrintNode;
 @GeneratedBy(MJPrintNode.class)
 public final class MJPrintNodeGen extends MJPrintNode {
 
-    @Child private MJExpresionNode expresion_;
+    @Child private MJExpresionNode expression_;
     @CompilationFinal private int state_;
 
-    private MJPrintNodeGen(MJExpresionNode expresion) {
-        this.expresion_ = expresion;
+    private MJPrintNodeGen(MJExpresionNode expression) {
+        this.expression_ = expression;
     }
 
     @Override
@@ -30,33 +30,33 @@ public final class MJPrintNodeGen extends MJPrintNode {
     }
 
     private Object execute_int0(VirtualFrame frameValue, int state) {
-        int expresionValue_ = this.expresion_.executeI32(frameValue);
+        int expressionValue_ = this.expression_.executeI32(frameValue);
         assert (state & 0b1) != 0 /* is-active printI(int) */;
-        return printI(expresionValue_);
+        return printI(expressionValue_);
     }
 
     private Object execute_generic1(VirtualFrame frameValue, int state) {
-        Object expresionValue_ = this.expresion_.executeGeneric(frameValue);
-        if ((state & 0b1) != 0 /* is-active printI(int) */ && expresionValue_ instanceof Integer) {
-            int expresionValue__ = (int) expresionValue_;
-            return printI(expresionValue__);
+        Object expressionValue_ = this.expression_.executeGeneric(frameValue);
+        if ((state & 0b1) != 0 /* is-active printI(int) */ && expressionValue_ instanceof Integer) {
+            int expressionValue__ = (int) expressionValue_;
+            return printI(expressionValue__);
         }
         if ((state & 0b10) != 0 /* is-active printO(Object) */) {
-            return printO(expresionValue_);
+            return printO(expressionValue_);
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
-        return executeAndSpecialize(expresionValue_);
+        return executeAndSpecialize(expressionValue_);
     }
 
-    private Object executeAndSpecialize(Object expresionValue) {
+    private Object executeAndSpecialize(Object expressionValue) {
         int state = state_;
-        if (expresionValue instanceof Integer) {
-            int expresionValue_ = (int) expresionValue;
+        if (expressionValue instanceof Integer) {
+            int expressionValue_ = (int) expressionValue;
             this.state_ = state = state | 0b1 /* add-active printI(int) */;
-            return printI(expresionValue_);
+            return printI(expressionValue_);
         }
         this.state_ = state = state | 0b10 /* add-active printO(Object) */;
-        return printO(expresionValue);
+        return printO(expressionValue);
     }
 
     @Override
@@ -70,8 +70,8 @@ public final class MJPrintNodeGen extends MJPrintNode {
         return NodeCost.POLYMORPHIC;
     }
 
-    public static MJPrintNode create(MJExpresionNode expresion) {
-        return new MJPrintNodeGen(expresion);
+    public static MJPrintNode create(MJExpresionNode expression) {
+        return new MJPrintNodeGen(expression);
     }
 
 }

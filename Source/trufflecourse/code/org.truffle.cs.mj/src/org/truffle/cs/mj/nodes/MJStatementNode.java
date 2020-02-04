@@ -6,5 +6,7 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 
 @NodeInfo
 public abstract class MJStatementNode extends Node {
+
     public abstract Object execute(VirtualFrame frame);
+
 }
