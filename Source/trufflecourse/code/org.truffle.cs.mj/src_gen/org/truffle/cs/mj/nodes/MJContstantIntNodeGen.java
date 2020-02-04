@@ -20,6 +20,12 @@ public final class MJContstantIntNodeGen extends MJContstantIntNode {
     }
 
     @Override
+    public float executeF32(VirtualFrame frameValue) {
+        CompilerDirectives.transferToInterpreterAndInvalidate();
+        throw new AssertionError("Delegation failed.");
+    }
+
+    @Override
     public int executeI32(VirtualFrame frameValue) {
         return doInt();
     }

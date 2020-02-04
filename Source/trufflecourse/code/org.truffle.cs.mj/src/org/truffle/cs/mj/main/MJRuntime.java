@@ -20,10 +20,24 @@ public class MJRuntime {
 // parseRD(mjProgramRD);
 // parseRD(mjSimpletIfRD);
 // parseRD(mjSimpletWhileRD);
-        parseRD(whileLoopRD);
+        parseRD(test);
 // parseRD(ifProgram);
 // parseRDBenchmark(divAlgorithm);
     }
+
+    static String test = "program P {"//
+// + " void foo(int i, float j) {print(i+j);}" //
+                    + " void main () int i; float f;{ "//
+                    + "     i = 1;"//
+                    + "     f = 10.8;"//
+                    + "     print(i);"//
+                    + "     print(f);"//
+// + " print(1 - 2);"//
+// + " print(1.0 - 2);"//
+// + " print(1 - 2.0);"//
+// + " print(1.0 - 2.0);"//
+                    + " }"//
+                    + "}";
 
     static String mjSimpleRD = ""//
                     + "program Sample { "//
@@ -69,13 +83,13 @@ public class MJRuntime {
                     + "}";
 
     static String whileLoopRD = "program P {"//
-                    + "             void foo(int i,int j) {print(i+j);}" //
+                    + "             void foo(int i, float j) {print(i+j);}" //
                     + "             void main () int i;{ "//
                     + "                 i =0; "//
                     + "                 while(i<10) {"//
                     + "                     print(i); "//
                     + "                     i=i+1;"//
-                    + "                     foo(i,2);" //
+                    + "                     foo(i,2.5);" //
                     + "                 }"//
                     + "             }"//
                     + "}";

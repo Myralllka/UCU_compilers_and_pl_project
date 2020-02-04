@@ -43,15 +43,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.truffle.cs.mj.nodes.MJBinaryNode;
 import org.truffle.cs.mj.nodes.MJBinaryNodeFactory;
 import org.truffle.cs.mj.nodes.MJBlock;
+import org.truffle.cs.mj.nodes.MJContstantFloatNodeGen;
 import org.truffle.cs.mj.nodes.MJContstantIntNodeGen;
 import org.truffle.cs.mj.nodes.MJExpresionNode;
 import org.truffle.cs.mj.nodes.MJFunction;
 import org.truffle.cs.mj.nodes.MJIfNode;
 import org.truffle.cs.mj.nodes.MJInvokeNode;
-import org.truffle.cs.mj.nodes.MJPrintNode;
 import org.truffle.cs.mj.nodes.MJPrintNodeGen;
 import org.truffle.cs.mj.nodes.MJReadParameterNode;
 import org.truffle.cs.mj.nodes.MJReturnNode;
@@ -59,10 +58,8 @@ import org.truffle.cs.mj.nodes.MJStatementExpresion;
 import org.truffle.cs.mj.nodes.MJStatementNode;
 import org.truffle.cs.mj.nodes.MJVariableNodeFactory;
 import org.truffle.cs.mj.nodes.MJWhileLoop;
-import org.truffle.cs.mj.nodes.MJVariableNode;
 
 import com.oracle.truffle.api.CallTarget;
-import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
@@ -478,7 +475,13 @@ public final class RecursiveDescentParser {
                         currentParsStatement = createLocalVarWrite(des, Expr());
                         break;
                     case plusas:
+                        Assignop();
+                        currentParsStatement = createLocalVarWrite(des, Expr());
+                        break;
                     case minusas:
+                        Assignop();
+                        currentParsStatement = createLocalVarWrite(des, Expr());
+                        break;
                     case timesas:
                     case slashas:
                     case remas:
@@ -737,7 +740,14 @@ public final class RecursiveDescentParser {
             case number:
                 scan();
                 int val = t.val;
-                expr = MJContstantIntNodeGen.create(val);
+                if (la.kind == period) {
+                    scan();
+                    check(number);
+                    float newVal = val + t.val / (float) Math.pow(10, t.str.length());
+                    expr = MJContstantFloatNodeGen.create(newVal);
+                } else {
+                    expr = MJContstantIntNodeGen.create(val);
+                }
                 break;
             case charConst:
                 scan();
@@ -791,6 +801,12 @@ public final class RecursiveDescentParser {
             case plusas:
                 op = OpCode.add;
                 scan();
+// int index = parameterNames != null ? parameterNames.indexOf(varname) : -1;
+// if (index >= 0) {
+// expr = new MJReadParameterNode(index);
+// } else {
+// expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(varname));
+// }
                 break;
             case minusas:
                 op = OpCode.sub;

@@ -15,6 +15,12 @@ public abstract class MJPrintNode extends MJStatementNode {
     }
 
     @Specialization
+    Object printF(float f) {
+        print(f);
+        return null;
+    }
+
+    @Specialization
     Object printO(Object o) {
         print(o);
         return null;
@@ -23,6 +29,11 @@ public abstract class MJPrintNode extends MJStatementNode {
     @TruffleBoundary
     private static void print(int i) {
         System.out.println(i);
+    }
+
+    @TruffleBoundary
+    private static void print(float f) {
+        System.out.println(f);
     }
 
     @TruffleBoundary
