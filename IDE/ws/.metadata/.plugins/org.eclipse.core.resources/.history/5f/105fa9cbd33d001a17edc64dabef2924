@@ -1,0 +1,14 @@
+package org.truffle.cs.mj.nodes;
+
+import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.Node;
+import com.oracle.truffle.api.nodes.NodeInfo;
+
+@NodeInfo
+public abstract class MJExpresionNode extends Node {
+
+    public abstract int executeI32(VirtualFrame frame);
+
+    public abstract float executeF32(VirtualFrame frame);
+
+}

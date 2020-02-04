@@ -1,0 +1,22 @@
+package org.truffle.cs.mj.nodes;
+
+import com.oracle.truffle.api.CallTarget;
+import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.DirectCallNode;
+
+public class MJInvokeNode extends MJExpresionNode {
+
+    @Child private DirectCallNode directCallNode;
+    @Children private final MJExpresionNode[] params;
+
+    public MJInvokeNode(CallTarget target, MJExpresionNode[] params) {
+        directCallNode = DirectCallNode.create(target);
+        this.params = params;
+    }
+
+    @Override
+    public Object executeGeneric(VirtualFrame frame) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+}

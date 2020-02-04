@@ -1,0 +1,21 @@
+package org.truffle.cs.mj.nodes;
+
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+import com.oracle.truffle.api.dsl.NodeChild;
+import com.oracle.truffle.api.frame.VirtualFrame;
+
+@NodeChild(value="expresion", type=MJExpresionNode.class)
+public abstract class MJPrintNode extends MJStatementNode {
+
+//    @Override
+//    public Object execute(VirtualFrame frame) {
+//        print();
+//        return null;
+//    }
+//
+//    @TruffleBoundary
+//    private static void print() {
+//        System.out.println(" ");
+//    }
+
+}

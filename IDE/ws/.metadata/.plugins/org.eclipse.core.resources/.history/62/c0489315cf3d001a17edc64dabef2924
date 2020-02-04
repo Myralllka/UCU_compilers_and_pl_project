@@ -1,0 +1,21 @@
+package org.truffle.cs.mj.nodes;
+
+import com.oracle.truffle.api.frame.VirtualFrame;
+
+public class MJBlock extends MJStatementNode {
+
+    @Children MJStatementNode statements[];
+
+    public MJBlock(MJStatementNode[] statements) {
+        this.statements = statements;
+    }
+
+    @Override
+    public Object execute(VirtualFrame frame) {
+        for (MJStatementNode stat : statements) {
+            stat.execute(frame);
+        }
+        return null;
+    }
+
+}

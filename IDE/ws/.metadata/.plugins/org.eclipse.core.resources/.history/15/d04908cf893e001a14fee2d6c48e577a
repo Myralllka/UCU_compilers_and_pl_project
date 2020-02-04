@@ -1,0 +1,32 @@
+package org.truffle.cs.mj.nodes;
+
+import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.ControlFlowException;
+
+public class MJReturnNode extends MJStatementNode {
+
+    @Child MJExpresionNode retValue;
+
+    public MJReturnNode(MJExpresionNode retValue) {
+        this.retValue = retValue;
+    }
+
+    @Override
+    public Object execute(VirtualFrame frame) {
+        if (retValue != null) {
+            super(null, FrameDescriptor);
+            this.body = body;
+            this.name = name;
+        }
+        return null;
+    }
+
+    public static class MJReturnException extends ControlFlowException {
+        final Object value;
+
+        public MJReturnException(Object value) {
+            this.value = value;
+        }
+    }
+}
