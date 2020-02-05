@@ -1,0 +1,230 @@
+// CheckStyle: start generated
+package com.oracle.truffle.api.test.builtin;
+
+import com.oracle.truffle.api.CompilerDirectives;
+import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.api.interop.ArityException;
+import com.oracle.truffle.api.interop.InteropLibrary;
+import com.oracle.truffle.api.interop.UnsupportedMessageException;
+import com.oracle.truffle.api.interop.UnsupportedTypeException;
+import com.oracle.truffle.api.library.DynamicDispatchLibrary;
+import com.oracle.truffle.api.library.LibraryExport;
+import com.oracle.truffle.api.library.LibraryFactory;
+import com.oracle.truffle.api.nodes.ExplodeLoop;
+import com.oracle.truffle.api.nodes.Node;
+import com.oracle.truffle.api.nodes.NodeCost;
+import com.oracle.truffle.api.test.builtin.BuiltinObject;
+import com.oracle.truffle.api.test.builtin.BuiltinObject.BuiltinNode;
+import com.oracle.truffle.api.test.builtin.BuiltinObject.MemberEntry;
+import com.oracle.truffle.api.test.builtin.BuiltinObject.MemberFunction;
+import com.oracle.truffle.api.test.builtin.BuiltinObject.MemberFunction.Execute;
+import java.util.concurrent.locks.Lock;
+
+@GeneratedBy(MemberFunction.class)
+final class MemberFunctionGen {
+
+    private static final LibraryFactory<DynamicDispatchLibrary> DYNAMIC_DISPATCH_LIBRARY_ = LibraryFactory.resolve(DynamicDispatchLibrary.class);
+
+    static  {
+        LibraryExport.register(MemberFunction.class, new InteropLibraryExports());
+    }
+
+    private MemberFunctionGen() {
+    }
+
+    @GeneratedBy(MemberFunction.class)
+    private static final class InteropLibraryExports extends LibraryExport<InteropLibrary> {
+
+        private InteropLibraryExports() {
+            super(InteropLibrary.class, MemberFunction.class, false);
+        }
+
+        @Override
+        protected InteropLibrary createUncached(Object receiver) {
+            assert receiver instanceof MemberFunction;
+            InteropLibrary uncached = new Uncached();
+            return uncached;
+        }
+
+        @Override
+        protected InteropLibrary createCached(Object receiver) {
+            assert receiver instanceof MemberFunction;
+            return new Cached();
+        }
+
+        @GeneratedBy(MemberFunction.class)
+        private static final class Cached extends InteropLibrary {
+
+            @CompilationFinal private int state_;
+            @CompilationFinal private int exclude_;
+            @Child private CachedData cached_cache;
+
+            Cached() {
+            }
+
+            @Override
+            public boolean accepts(Object receiver) {
+                assert !(receiver instanceof MemberFunction) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'com.oracle.truffle.api.test.builtin.BuiltinObject.MemberFunction'. Exported receiver with dynamic dispatch found but not expected.";
+                return receiver instanceof MemberFunction;
+            }
+
+            @ExplodeLoop
+            @Override
+            public Object execute(Object arg0Value_, Object... arg1Value) throws UnsupportedTypeException, ArityException, UnsupportedMessageException {
+                assert assertAdopted();
+                assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
+                MemberFunction arg0Value = (MemberFunction) arg0Value_;
+                int state = state_;
+                if (state != 0 /* is-active doCached(MemberFunction, Object[], MemberEntry, BuiltinNode) || doUncached(MemberFunction, Object[]) */) {
+                    if ((state & 0b1) != 0 /* is-active doCached(MemberFunction, Object[], MemberEntry, BuiltinNode) */) {
+                        CachedData s1_ = this.cached_cache;
+                        while (s1_ != null) {
+                            if ((arg0Value.member == s1_.cachedMember_)) {
+                                return Execute.doCached(arg0Value, arg1Value, s1_.cachedMember_, s1_.node_);
+                            }
+                            s1_ = s1_.next_;
+                        }
+                    }
+                    if ((state & 0b10) != 0 /* is-active doUncached(MemberFunction, Object[]) */) {
+                        return Execute.doUncached(arg0Value, arg1Value);
+                    }
+                }
+                CompilerDirectives.transferToInterpreterAndInvalidate();
+                return executeAndSpecialize(arg0Value, arg1Value);
+            }
+
+            private Object executeAndSpecialize(MemberFunction arg0Value, Object[] arg1Value) throws ArityException, UnsupportedTypeException {
+                Lock lock = getLock();
+                boolean hasLock = true;
+                lock.lock();
+                int state = state_;
+                int exclude = exclude_;
+                try {
+                    if ((exclude) == 0 /* is-not-excluded doCached(MemberFunction, Object[], MemberEntry, BuiltinNode) */) {
+                        int count1_ = 0;
+                        CachedData s1_ = this.cached_cache;
+                        if ((state & 0b1) != 0 /* is-active doCached(MemberFunction, Object[], MemberEntry, BuiltinNode) */) {
+                            while (s1_ != null) {
+                                if ((arg0Value.member == s1_.cachedMember_)) {
+                                    break;
+                                }
+                                s1_ = s1_.next_;
+                                count1_++;
+                            }
+                        }
+                        if (s1_ == null) {
+                            // assert (arg0Value.member == s1_.cachedMember_);
+                            if (count1_ < (BuiltinObject.MEMBER_NAME_CACHE_SIZE)) {
+                                s1_ = super.insert(new CachedData(cached_cache));
+                                s1_.cachedMember_ = (arg0Value.member);
+                                s1_.node_ = s1_.insertAccessor((s1_.cachedMember_.createNode()));
+                                this.cached_cache = s1_;
+                                this.state_ = state = state | 0b1 /* add-active doCached(MemberFunction, Object[], MemberEntry, BuiltinNode) */;
+                            }
+                        }
+                        if (s1_ != null) {
+                            lock.unlock();
+                            hasLock = false;
+                            return Execute.doCached(arg0Value, arg1Value, s1_.cachedMember_, s1_.node_);
+                        }
+                    }
+                    this.exclude_ = exclude = exclude | 0b1 /* add-excluded doCached(MemberFunction, Object[], MemberEntry, BuiltinNode) */;
+                    this.cached_cache = null;
+                    state = state & 0xfffffffe /* remove-active doCached(MemberFunction, Object[], MemberEntry, BuiltinNode) */;
+                    this.state_ = state = state | 0b10 /* add-active doUncached(MemberFunction, Object[]) */;
+                    lock.unlock();
+                    hasLock = false;
+                    return Execute.doUncached(arg0Value, arg1Value);
+                } finally {
+                    if (hasLock) {
+                        lock.unlock();
+                    }
+                }
+            }
+
+            @Override
+            public NodeCost getCost() {
+                int state = state_;
+                if (state == 0b0) {
+                    return NodeCost.UNINITIALIZED;
+                } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
+                    CachedData s1_ = this.cached_cache;
+                    if ((s1_ == null || s1_.next_ == null)) {
+                        return NodeCost.MONOMORPHIC;
+                    }
+                }
+                return NodeCost.POLYMORPHIC;
+            }
+
+            @Override
+            public boolean isExecutable(Object receiver) {
+                assert assertAdopted();
+                assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
+                return ((MemberFunction) receiver).isExecutable();
+            }
+
+            @GeneratedBy(MemberFunction.class)
+            private static final class CachedData extends Node {
+
+                @Child CachedData next_;
+                @CompilationFinal MemberEntry cachedMember_;
+                @Child BuiltinNode node_;
+
+                CachedData(CachedData next_) {
+                    this.next_ = next_;
+                }
+
+                @Override
+                public NodeCost getCost() {
+                    return NodeCost.NONE;
+                }
+
+                <T extends Node> T insertAccessor(T node) {
+                    return super.insert(node);
+                }
+
+            }
+        }
+        @GeneratedBy(MemberFunction.class)
+        private static final class Uncached extends InteropLibrary {
+
+            Uncached() {
+            }
+
+            @TruffleBoundary
+            @Override
+            public boolean accepts(Object receiver) {
+                assert !(receiver instanceof MemberFunction) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'com.oracle.truffle.api.test.builtin.BuiltinObject.MemberFunction'. Exported receiver with dynamic dispatch found but not expected.";
+                return receiver instanceof MemberFunction;
+            }
+
+            @Override
+            public boolean isAdoptable() {
+                return false;
+            }
+
+            @Override
+            public NodeCost getCost() {
+                return NodeCost.MEGAMORPHIC;
+            }
+
+            @TruffleBoundary
+            @Override
+            public Object execute(Object arg0Value_, Object... arg1Value) throws UnsupportedTypeException, ArityException {
+                assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
+                MemberFunction arg0Value = (MemberFunction) arg0Value_;
+                return Execute.doUncached(arg0Value, arg1Value);
+            }
+
+            @TruffleBoundary
+            @Override
+            public boolean isExecutable(Object receiver) {
+                assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
+                return ((MemberFunction) receiver) .isExecutable();
+            }
+
+        }
+    }
+}

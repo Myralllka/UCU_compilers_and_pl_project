@@ -1,0 +1,31 @@
+// CheckStyle: start generated
+package com.oracle.truffle.tck.instrumentation;
+
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.api.instrumentation.TruffleInstrument;
+import com.oracle.truffle.api.instrumentation.TruffleInstrument.Provider;
+import com.oracle.truffle.api.instrumentation.TruffleInstrument.Registration;
+import com.oracle.truffle.tck.instrumentation.DebugALot;
+import java.util.Collection;
+import java.util.Collections;
+
+@GeneratedBy(DebugALot.class)
+@Registration(id = "debugalot", name = "Debug a lot")
+public class DebugALotProvider implements Provider {
+
+    @Override
+    public String getInstrumentClassName() {
+        return "com.oracle.truffle.tck.instrumentation.DebugALot";
+    }
+
+    @Override
+    public TruffleInstrument create() {
+        return new DebugALot();
+    }
+
+    @Override
+    public Collection<String> getServicesClassNames() {
+        return Collections.emptySet();
+    }
+
+}

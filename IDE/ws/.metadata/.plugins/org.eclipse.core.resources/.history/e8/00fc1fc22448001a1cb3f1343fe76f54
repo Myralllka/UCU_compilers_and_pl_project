@@ -1,0 +1,132 @@
+// CheckStyle: start generated
+package com.oracle.truffle.api.library.test;
+
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.api.library.DynamicDispatchLibrary;
+import com.oracle.truffle.api.library.LibraryExport;
+import com.oracle.truffle.api.library.LibraryFactory;
+import com.oracle.truffle.api.library.test.CachedLibrarySharingTest.LibraryObject1;
+import com.oracle.truffle.api.library.test.CachedLibrarySharingTest.LibrarySharing1;
+import com.oracle.truffle.api.library.test.CachedLibrarySharingTest.LibrarySharing2;
+import com.oracle.truffle.api.library.test.CachedLibrarySharingTest.LibraryObject1.M1;
+import com.oracle.truffle.api.nodes.NodeCost;
+
+@GeneratedBy(LibraryObject1.class)
+final class LibraryObject1Gen {
+
+    private static final LibraryFactory<DynamicDispatchLibrary> DYNAMIC_DISPATCH_LIBRARY_ = LibraryFactory.resolve(DynamicDispatchLibrary.class);
+    private static final LibraryFactory<LibrarySharing2> LIBRARY_SHARING2_ = LibraryFactory.resolve(LibrarySharing2.class);
+
+    static  {
+        LibraryExport.register(LibraryObject1.class, new LibrarySharing1Exports());
+    }
+
+    private LibraryObject1Gen() {
+    }
+
+    @GeneratedBy(LibraryObject1.class)
+    private static final class LibrarySharing1Exports extends LibraryExport<LibrarySharing1> {
+
+        private static final Uncached UNCACHED = new Uncached();
+
+        private LibrarySharing1Exports() {
+            super(LibrarySharing1.class, LibraryObject1.class, false);
+        }
+
+        @Override
+        protected LibrarySharing1 createUncached(Object receiver) {
+            assert receiver instanceof LibraryObject1;
+            LibrarySharing1 uncached = LibrarySharing1Exports.UNCACHED;
+            return uncached;
+        }
+
+        @Override
+        protected LibrarySharing1 createCached(Object receiver) {
+            assert receiver instanceof LibraryObject1;
+            return new Cached(receiver);
+        }
+
+        @GeneratedBy(LibraryObject1.class)
+        private static final class Cached extends LibrarySharing1 {
+
+            @Child private LibrarySharing2 receiverLibrarySharing2_;
+
+            Cached(Object receiver) {
+                this.receiverLibrarySharing2_ = insert(LIBRARY_SHARING2_.create((receiver)));
+            }
+
+            @Override
+            public boolean accepts(Object receiver) {
+                assert !(receiver instanceof LibraryObject1) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'com.oracle.truffle.api.library.test.CachedLibrarySharingTest.LibraryObject1'. Exported receiver with dynamic dispatch found but not expected.";
+                if (!(receiver instanceof LibraryObject1)) {
+                    return false;
+                } else if (!this.receiverLibrarySharing2_.accepts((receiver))) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public String m1(Object arg0Value_) {
+                assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
+                LibraryObject1 arg0Value = (LibraryObject1) arg0Value_;
+                return M1.m1(arg0Value, this.receiverLibrarySharing2_);
+            }
+
+            @Override
+            public NodeCost getCost() {
+                return NodeCost.MONOMORPHIC;
+            }
+
+            @Override
+            public String m0(Object arg0Value_) {
+                assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
+                LibraryObject1 arg0Value = (LibraryObject1) arg0Value_;
+                return arg0Value.m0(this.receiverLibrarySharing2_);
+            }
+
+        }
+        @GeneratedBy(LibraryObject1.class)
+        private static final class Uncached extends LibrarySharing1 {
+
+            Uncached() {
+            }
+
+            @TruffleBoundary
+            @Override
+            public boolean accepts(Object receiver) {
+                assert !(receiver instanceof LibraryObject1) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'com.oracle.truffle.api.library.test.CachedLibrarySharingTest.LibraryObject1'. Exported receiver with dynamic dispatch found but not expected.";
+                return receiver instanceof LibraryObject1;
+            }
+
+            @Override
+            public boolean isAdoptable() {
+                return false;
+            }
+
+            @Override
+            public NodeCost getCost() {
+                return NodeCost.MEGAMORPHIC;
+            }
+
+            @TruffleBoundary
+            @Override
+            public String m1(Object arg0Value_) {
+                assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
+                LibraryObject1 arg0Value = (LibraryObject1) arg0Value_;
+                return M1.m1(arg0Value, LIBRARY_SHARING2_.getUncached((arg0Value)));
+            }
+
+            @TruffleBoundary
+            @Override
+            public String m0(Object arg0Value_) {
+                assert this.accepts(arg0Value_) : "Invalid library usage. Library does not accept given receiver.";
+                LibraryObject1 arg0Value = (LibraryObject1) arg0Value_;
+                return arg0Value.m0(LIBRARY_SHARING2_.getUncached((arg0Value)));
+            }
+
+        }
+    }
+}

@@ -20,18 +20,23 @@ public class MJRuntime {
 // parseRD(mjProgramRD);
 // parseRD(mjSimpletIfRD);
 // parseRD(mjSimpletWhileRD);
-        parseRD(test);
+// parseRD(test);
 // parseRD(ifProgram);
-// parseRDBenchmark(divAlgorithm);
+        parseRD(divAlgorithm);
     }
 
     static String test = "program P {"//
 // + " void foo(int i, float j) {print(i+j);}" //
                     + " void main () int i; float f;{ "//
-                    + "     i = 1;"//
+                    + "     i = 24;"//
                     + "     f = 10.8;"//
-                    + "     print(i);"//
+                    + "     f++;"//
+                    + "     i--;"//
                     + "     print(f);"//
+                    + "     print(-i);"//
+                    + "     i+=100/10;"//
+// + " print(f);"//
+                    + "     print(i);"//
 // + " print(1 - 2);"//
 // + " print(1.0 - 2);"//
 // + " print(1 - 2.0);"//
@@ -129,9 +134,11 @@ public class MJRuntime {
                     + "                 }"//
                     + "                 return neg;"//
                     + "             }"//
+
                     + "             int sub(int a,int b) {"//
                     + "                 return a + flipSign(b);"//
                     + "             }"//
+
                     + "             int mul(int a,int b) int sum;int i; {"//
                     + "                 if(a<b) {"//
                     + "                     return mul(b,a);"//
@@ -147,8 +154,10 @@ public class MJRuntime {
                     + "                 }"//
                     + "                 return sum;"//
                     + "             }" //
+
                     + "             void main (int a,int b){ " //
-                    + "                 print(mul(a,b));"//
+                    + "                 print(flipSign(42));"//
+// + " print(mul(a,b));"//
                     + "             }"//
                     + "}";
 
@@ -160,9 +169,9 @@ public class MJRuntime {
         TruffleRuntime runtime = Truffle.getRuntime();
         System.out.println("Calling main function...");
         CallTarget callTarget = runtime.createCallTarget(parser.getMain());
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 10; i++) {
 // System.out.println(callTarget.call(i));
-            callTarget.call(i);
+            callTarget.call(i, i + 1000);
         }
     }
 

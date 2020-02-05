@@ -1,0 +1,38 @@
+// CheckStyle: start generated
+package com.oracle.truffle.api.test.polyglot;
+
+import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.TruffleFile.FileTypeDetector;
+import com.oracle.truffle.api.TruffleLanguage.Provider;
+import com.oracle.truffle.api.TruffleLanguage.Registration;
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.api.test.polyglot.LanguageSPITest.InheritedVersionLanguage;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+@GeneratedBy(InheritedVersionLanguage.class)
+@Registration(id = "SPIInheritedVersionLanguage", name = "")
+public class LanguageSPITestInheritedVersionLanguageProvider implements Provider {
+
+    @Override
+    public String getLanguageClassName() {
+        return "com.oracle.truffle.api.test.polyglot.LanguageSPITest$InheritedVersionLanguage";
+    }
+
+    @Override
+    public TruffleLanguage<?> create() {
+        return new InheritedVersionLanguage();
+    }
+
+    @Override
+    public List<FileTypeDetector> createFileTypeDetectors() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<String> getServicesClassNames() {
+        return Collections.emptySet();
+    }
+
+}

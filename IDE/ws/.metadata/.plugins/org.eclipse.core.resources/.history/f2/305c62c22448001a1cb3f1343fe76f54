@@ -1,0 +1,105 @@
+// CheckStyle: start generated
+package com.oracle.truffle.api.library.test.examples;
+
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.api.library.DynamicDispatchLibrary;
+import com.oracle.truffle.api.library.LibraryExport;
+import com.oracle.truffle.api.library.LibraryFactory;
+import com.oracle.truffle.api.library.Message;
+import com.oracle.truffle.api.library.ReflectionLibrary;
+import com.oracle.truffle.api.library.test.examples.ReflectiveExportExample.ReflectiveExport;
+import com.oracle.truffle.api.nodes.NodeCost;
+
+@GeneratedBy(ReflectiveExport.class)
+final class ReflectiveExportGen {
+
+    private static final LibraryFactory<DynamicDispatchLibrary> DYNAMIC_DISPATCH_LIBRARY_ = LibraryFactory.resolve(DynamicDispatchLibrary.class);
+
+    static  {
+        LibraryExport.register(ReflectiveExport.class, new ReflectionLibraryExports());
+    }
+
+    private ReflectiveExportGen() {
+    }
+
+    @GeneratedBy(ReflectiveExport.class)
+    private static final class ReflectionLibraryExports extends LibraryExport<ReflectionLibrary> {
+
+        private static final Uncached UNCACHED = new Uncached();
+        private static final Cached CACHE = new Cached();
+
+        private ReflectionLibraryExports() {
+            super(ReflectionLibrary.class, ReflectiveExport.class, false);
+        }
+
+        @Override
+        protected ReflectionLibrary createUncached(Object receiver) {
+            assert receiver instanceof ReflectiveExport;
+            ReflectionLibrary uncached = ReflectionLibraryExports.UNCACHED;
+            return uncached;
+        }
+
+        @Override
+        protected ReflectionLibrary createCached(Object receiver) {
+            assert receiver instanceof ReflectiveExport;
+            return ReflectionLibraryExports.CACHE;
+        }
+
+        @GeneratedBy(ReflectiveExport.class)
+        private static final class Cached extends ReflectionLibrary {
+
+            Cached() {
+            }
+
+            @Override
+            public boolean accepts(Object receiver) {
+                assert !(receiver instanceof ReflectiveExport) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'com.oracle.truffle.api.library.test.examples.ReflectiveExportExample.ReflectiveExport'. Exported receiver with dynamic dispatch found but not expected.";
+                return receiver instanceof ReflectiveExport;
+            }
+
+            @Override
+            public boolean isAdoptable() {
+                return false;
+            }
+
+            @Override
+            public Object send(Object receiver, Message message, Object... args) throws Exception {
+                assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
+                return ((ReflectiveExport) receiver).send(message, args);
+            }
+
+        }
+        @GeneratedBy(ReflectiveExport.class)
+        private static final class Uncached extends ReflectionLibrary {
+
+            Uncached() {
+            }
+
+            @TruffleBoundary
+            @Override
+            public boolean accepts(Object receiver) {
+                assert !(receiver instanceof ReflectiveExport) || DYNAMIC_DISPATCH_LIBRARY_.getUncached().dispatch(receiver) == null : "Invalid library export 'com.oracle.truffle.api.library.test.examples.ReflectiveExportExample.ReflectiveExport'. Exported receiver with dynamic dispatch found but not expected.";
+                return receiver instanceof ReflectiveExport;
+            }
+
+            @Override
+            public boolean isAdoptable() {
+                return false;
+            }
+
+            @Override
+            public NodeCost getCost() {
+                return NodeCost.MEGAMORPHIC;
+            }
+
+            @TruffleBoundary
+            @Override
+            public Object send(Object receiver, Message message, Object... args) throws Exception {
+                assert this.accepts(receiver) : "Invalid library usage. Library does not accept given receiver.";
+                return ((ReflectiveExport) receiver) .send(message, args);
+            }
+
+        }
+    }
+}

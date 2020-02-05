@@ -1,0 +1,39 @@
+// CheckStyle: start generated
+package com.oracle.truffle.nfi.test.parser.backend;
+
+import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.TruffleFile.FileTypeDetector;
+import com.oracle.truffle.api.TruffleLanguage.Provider;
+import com.oracle.truffle.api.TruffleLanguage.Registration;
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.nfi.test.parser.backend.NFITestBackend;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+@GeneratedBy(NFITestBackend.class)
+@Registration(id = "test/nfi-backend", internal = true, name = "NFITestBackend")
+public class NFITestBackendProvider implements Provider {
+
+    @Override
+    public String getLanguageClassName() {
+        return "com.oracle.truffle.nfi.test.parser.backend.NFITestBackend";
+    }
+
+    @Override
+    public TruffleLanguage<?> create() {
+        return new NFITestBackend();
+    }
+
+    @Override
+    public List<FileTypeDetector> createFileTypeDetectors() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<String> getServicesClassNames() {
+        return Arrays.asList("com.oracle.truffle.nfi.spi.NFIBackendFactory");
+    }
+
+}

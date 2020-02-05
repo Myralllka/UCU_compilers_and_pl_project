@@ -1,0 +1,31 @@
+// CheckStyle: start generated
+package com.oracle.truffle.tck.instrumentation;
+
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.api.instrumentation.TruffleInstrument;
+import com.oracle.truffle.api.instrumentation.TruffleInstrument.Provider;
+import com.oracle.truffle.api.instrumentation.TruffleInstrument.Registration;
+import com.oracle.truffle.tck.instrumentation.VerifierInstrument;
+import java.util.Arrays;
+import java.util.Collection;
+
+@GeneratedBy(VerifierInstrument.class)
+@Registration(id = "TckVerifierInstrument", name = "TckVerifierInstrument")
+public class VerifierInstrumentProvider implements Provider {
+
+    @Override
+    public String getInstrumentClassName() {
+        return "com.oracle.truffle.tck.instrumentation.VerifierInstrument";
+    }
+
+    @Override
+    public TruffleInstrument create() {
+        return new VerifierInstrument();
+    }
+
+    @Override
+    public Collection<String> getServicesClassNames() {
+        return Arrays.asList("com.oracle.truffle.tck.common.inline.InlineVerifier");
+    }
+
+}

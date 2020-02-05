@@ -1,0 +1,38 @@
+// CheckStyle: start generated
+package com.oracle.truffle.api.test.polyglot;
+
+import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.TruffleFile.FileTypeDetector;
+import com.oracle.truffle.api.TruffleLanguage.Provider;
+import com.oracle.truffle.api.TruffleLanguage.Registration;
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.api.test.polyglot.InteractiveEvalTest.DefaultInteractiveLanguage;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+@GeneratedBy(DefaultInteractiveLanguage.class)
+@Registration(characterMimeTypes = {"application/x-test-definteract"}, id = "DefaultInteractive", name = "DefaultInteractive", version = "1.0")
+public class InteractiveEvalTestDefaultInteractiveLanguageProvider implements Provider {
+
+    @Override
+    public String getLanguageClassName() {
+        return "com.oracle.truffle.api.test.polyglot.InteractiveEvalTest$DefaultInteractiveLanguage";
+    }
+
+    @Override
+    public TruffleLanguage<?> create() {
+        return new DefaultInteractiveLanguage();
+    }
+
+    @Override
+    public List<FileTypeDetector> createFileTypeDetectors() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<String> getServicesClassNames() {
+        return Collections.emptySet();
+    }
+
+}

@@ -1,0 +1,39 @@
+// CheckStyle: start generated
+package com.oracle.truffle.api.test.polyglot;
+
+import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.TruffleFile.FileTypeDetector;
+import com.oracle.truffle.api.TruffleLanguage.ContextPolicy;
+import com.oracle.truffle.api.TruffleLanguage.Provider;
+import com.oracle.truffle.api.TruffleLanguage.Registration;
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.api.test.polyglot.LanguageSPITest.OneContextLanguage;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+@GeneratedBy(OneContextLanguage.class)
+@Registration(contextPolicy = ContextPolicy.EXCLUSIVE, id = "OneContextLanguage", name = "OneContextLanguage", version = "1.0")
+public class LanguageSPITestOneContextLanguageProvider implements Provider {
+
+    @Override
+    public String getLanguageClassName() {
+        return "com.oracle.truffle.api.test.polyglot.LanguageSPITest$OneContextLanguage";
+    }
+
+    @Override
+    public TruffleLanguage<?> create() {
+        return new OneContextLanguage();
+    }
+
+    @Override
+    public List<FileTypeDetector> createFileTypeDetectors() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<String> getServicesClassNames() {
+        return Collections.emptySet();
+    }
+
+}

@@ -1,0 +1,38 @@
+// CheckStyle: start generated
+package com.oracle.truffle.api.test.polyglot;
+
+import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.TruffleFile.FileTypeDetector;
+import com.oracle.truffle.api.TruffleLanguage.Provider;
+import com.oracle.truffle.api.TruffleLanguage.Registration;
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.api.test.polyglot.MIMETypeTest.MIMETypeLanguage7;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+@GeneratedBy(MIMETypeLanguage7.class)
+@Registration(byteMimeTypes = {"application/test-js"}, characterMimeTypes = {"text/test-js"}, defaultMimeType = "text/test-js", id = "MIMETypeLanguage7", name = "")
+public class MIMETypeTestMIMETypeLanguage7Provider implements Provider {
+
+    @Override
+    public String getLanguageClassName() {
+        return "com.oracle.truffle.api.test.polyglot.MIMETypeTest$MIMETypeLanguage7";
+    }
+
+    @Override
+    public TruffleLanguage<?> create() {
+        return new MIMETypeLanguage7();
+    }
+
+    @Override
+    public List<FileTypeDetector> createFileTypeDetectors() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<String> getServicesClassNames() {
+        return Collections.emptySet();
+    }
+
+}

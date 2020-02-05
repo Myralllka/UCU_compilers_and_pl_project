@@ -1,0 +1,38 @@
+// CheckStyle: start generated
+package com.oracle.truffle.api.test.polyglot;
+
+import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.TruffleFile.FileTypeDetector;
+import com.oracle.truffle.api.TruffleLanguage.Provider;
+import com.oracle.truffle.api.TruffleLanguage.Registration;
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.api.test.polyglot.LanguageSPIOrderTest.ActivateDuringFinalizeLanguage;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+@GeneratedBy(ActivateDuringFinalizeLanguage.class)
+@Registration(dependentLanguages = {"SPIPublicLanguage"}, id = "SPIActivateDuringFinalize", name = "")
+public class LanguageSPIOrderTestActivateDuringFinalizeLanguageProvider implements Provider {
+
+    @Override
+    public String getLanguageClassName() {
+        return "com.oracle.truffle.api.test.polyglot.LanguageSPIOrderTest$ActivateDuringFinalizeLanguage";
+    }
+
+    @Override
+    public TruffleLanguage<?> create() {
+        return new ActivateDuringFinalizeLanguage();
+    }
+
+    @Override
+    public List<FileTypeDetector> createFileTypeDetectors() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<String> getServicesClassNames() {
+        return Collections.emptySet();
+    }
+
+}

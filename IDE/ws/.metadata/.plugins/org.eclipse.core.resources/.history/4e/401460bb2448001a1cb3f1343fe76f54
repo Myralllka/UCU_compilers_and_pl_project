@@ -1,0 +1,38 @@
+// CheckStyle: start generated
+package com.oracle.truffle.nfi;
+
+import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.TruffleFile.FileTypeDetector;
+import com.oracle.truffle.api.TruffleLanguage.Provider;
+import com.oracle.truffle.api.TruffleLanguage.Registration;
+import com.oracle.truffle.api.dsl.GeneratedBy;
+import com.oracle.truffle.nfi.NFILanguage;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+@GeneratedBy(NFILanguage.class)
+@Registration(characterMimeTypes = {"application/x-native"}, id = "nfi", internal = true, name = "TruffleNFI", version = "0.1")
+public class NFILanguageProvider implements Provider {
+
+    @Override
+    public String getLanguageClassName() {
+        return "com.oracle.truffle.nfi.NFILanguage";
+    }
+
+    @Override
+    public TruffleLanguage<?> create() {
+        return new NFILanguage();
+    }
+
+    @Override
+    public List<FileTypeDetector> createFileTypeDetectors() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<String> getServicesClassNames() {
+        return Collections.emptySet();
+    }
+
+}
