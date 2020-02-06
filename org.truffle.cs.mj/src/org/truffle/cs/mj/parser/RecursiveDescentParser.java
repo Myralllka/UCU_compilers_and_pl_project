@@ -591,9 +591,10 @@ public final class RecursiveDescentParser {
                 MJExpresionNode retValue = null;
                 if (sym != semicolon) {
                     retValue = Expr();
-                } else {
-                    break;
                 }
+// } else {
+// break;
+// }
                 currentParsStatement = new MJReturnNode(retValue);
                 check(semicolon);
                 break;
@@ -769,7 +770,15 @@ public final class RecursiveDescentParser {
             case ident:
                 String varname = Designator();
                 if (sym == lpar) {
-                    ActPars();
+                    List<MJExpresionNode> parameters = ActPars();
+                    MJFunction callee = getFunction(varname);
+                    CallTarget callTarget = callAble.get(callee);
+                    if (callTarget == null) {
+                        callTarget = Truffle.getRuntime().createCallTarget(callee);
+                        callAble.put(callee, callTarget);
+                    }
+                    expr = new MJInvokeNode(callTarget,
+                                    parameters.toArray(new MJExpresionNode[parameters.size()]));
                 } else {
 
                     int index = parameterNames != null ? parameterNames.indexOf(varname) : -1;
