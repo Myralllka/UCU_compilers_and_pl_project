@@ -8,8 +8,10 @@ import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import org.truffle.cs.mj.nodes.MJBinaryNode;
 import org.truffle.cs.mj.nodes.MJExpresionNode;
+import org.truffle.cs.mj.nodes.MJTypesGen;
 import org.truffle.cs.mj.nodes.MJBinaryNode.AddNode;
 import org.truffle.cs.mj.nodes.MJBinaryNode.BooleanAnd;
 import org.truffle.cs.mj.nodes.MJBinaryNode.BooleanOr;
@@ -42,8 +44,19 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            boolean xValue_ = this.x_.executeBool(frameValue);
-            boolean yValue_ = this.y_.executeBool(frameValue);
+            boolean xValue_;
+            try {
+                xValue_ = this.x_.executeBool(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            boolean yValue_;
+            try {
+                yValue_ = this.y_.executeBool(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             if (state != 0 /* is-active or(boolean, boolean) */) {
                 return or(xValue_, yValue_);
             }
@@ -54,13 +67,30 @@ public final class MJBinaryNodeFactory {
         @Override
         public boolean executeBool(VirtualFrame frameValue) {
             int state = state_;
-            boolean xValue_ = this.x_.executeBool(frameValue);
-            boolean yValue_ = this.y_.executeBool(frameValue);
+            boolean xValue_;
+            try {
+                xValue_ = this.x_.executeBool(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            boolean yValue_;
+            try {
+                yValue_ = this.y_.executeBool(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             if (state != 0 /* is-active or(boolean, boolean) */) {
                 return or(xValue_, yValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(xValue_, yValue_);
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            executeBool(frameValue);
+            return;
         }
 
         private boolean executeAndSpecialize(Object xValue, Object yValue) {
@@ -106,8 +136,19 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            boolean xValue_ = this.x_.executeBool(frameValue);
-            boolean yValue_ = this.y_.executeBool(frameValue);
+            boolean xValue_;
+            try {
+                xValue_ = this.x_.executeBool(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            boolean yValue_;
+            try {
+                yValue_ = this.y_.executeBool(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             if (state != 0 /* is-active and(boolean, boolean) */) {
                 return and(xValue_, yValue_);
             }
@@ -118,13 +159,30 @@ public final class MJBinaryNodeFactory {
         @Override
         public boolean executeBool(VirtualFrame frameValue) {
             int state = state_;
-            boolean xValue_ = this.x_.executeBool(frameValue);
-            boolean yValue_ = this.y_.executeBool(frameValue);
+            boolean xValue_;
+            try {
+                xValue_ = this.x_.executeBool(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            boolean yValue_;
+            try {
+                yValue_ = this.y_.executeBool(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             if (state != 0 /* is-active and(boolean, boolean) */) {
                 return and(xValue_, yValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(xValue_, yValue_);
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            executeBool(frameValue);
+            return;
         }
 
         private boolean executeAndSpecialize(Object xValue, Object yValue) {
@@ -180,15 +238,37 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active notEqual(int, int) */;
             return notEqual(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_float1(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active notEqual(float, float) */;
             return notEqual(xValue_, yValue_);
         }
@@ -230,15 +310,37 @@ public final class MJBinaryNodeFactory {
         }
 
         private boolean executeBool_int_int3(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active notEqual(int, int) */;
             return notEqual(xValue_, yValue_);
         }
 
         private boolean executeBool_float_float4(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active notEqual(float, float) */;
             return notEqual(xValue_, yValue_);
         }
@@ -265,6 +367,12 @@ public final class MJBinaryNodeFactory {
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(xValue_, yValue_);
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            executeBool(frameValue);
+            return;
         }
 
         private boolean executeAndSpecialize(Object xValue, Object yValue) {
@@ -320,8 +428,19 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             if (state != 0 /* is-active equal(int, int) */) {
                 return equal(xValue_, yValue_);
             }
@@ -332,13 +451,30 @@ public final class MJBinaryNodeFactory {
         @Override
         public boolean executeBool(VirtualFrame frameValue) {
             int state = state_;
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             if (state != 0 /* is-active equal(int, int) */) {
                 return equal(xValue_, yValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(xValue_, yValue_);
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            executeBool(frameValue);
+            return;
         }
 
         private boolean executeAndSpecialize(Object xValue, Object yValue) {
@@ -394,15 +530,37 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active greaterEqual(int, int) */;
             return greaterEqual(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_float1(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active greaterEqual(float, float) */;
             return greaterEqual(xValue_, yValue_);
         }
@@ -441,15 +599,37 @@ public final class MJBinaryNodeFactory {
         }
 
         private boolean executeBool_int_int3(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active greaterEqual(int, int) */;
             return greaterEqual(xValue_, yValue_);
         }
 
         private boolean executeBool_float_float4(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active greaterEqual(float, float) */;
             return greaterEqual(xValue_, yValue_);
         }
@@ -473,6 +653,12 @@ public final class MJBinaryNodeFactory {
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(xValue_, yValue_);
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            executeBool(frameValue);
+            return;
         }
 
         private boolean executeAndSpecialize(Object xValue, Object yValue) {
@@ -537,15 +723,37 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active lessEqual(int, int) */;
             return lessEqual(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_float1(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active lessEqual(float, float) */;
             return lessEqual(xValue_, yValue_);
         }
@@ -584,15 +792,37 @@ public final class MJBinaryNodeFactory {
         }
 
         private boolean executeBool_int_int3(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active lessEqual(int, int) */;
             return lessEqual(xValue_, yValue_);
         }
 
         private boolean executeBool_float_float4(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active lessEqual(float, float) */;
             return lessEqual(xValue_, yValue_);
         }
@@ -616,6 +846,12 @@ public final class MJBinaryNodeFactory {
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(xValue_, yValue_);
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            executeBool(frameValue);
+            return;
         }
 
         private boolean executeAndSpecialize(Object xValue, Object yValue) {
@@ -680,15 +916,37 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active greaterThan(int, int) */;
             return greaterThan(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_float1(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active greaterThan(float, float) */;
             return greaterThan(xValue_, yValue_);
         }
@@ -727,15 +985,37 @@ public final class MJBinaryNodeFactory {
         }
 
         private boolean executeBool_int_int3(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active greaterThan(int, int) */;
             return greaterThan(xValue_, yValue_);
         }
 
         private boolean executeBool_float_float4(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active greaterThan(float, float) */;
             return greaterThan(xValue_, yValue_);
         }
@@ -759,6 +1039,12 @@ public final class MJBinaryNodeFactory {
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(xValue_, yValue_);
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            executeBool(frameValue);
+            return;
         }
 
         private boolean executeAndSpecialize(Object xValue, Object yValue) {
@@ -823,15 +1109,37 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active lessThan(int, int) */;
             return lessThan(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_float1(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active lessThan(float, float) */;
             return lessThan(xValue_, yValue_);
         }
@@ -870,15 +1178,37 @@ public final class MJBinaryNodeFactory {
         }
 
         private boolean executeBool_int_int3(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active lessThan(int, int) */;
             return lessThan(xValue_, yValue_);
         }
 
         private boolean executeBool_float_float4(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active lessThan(float, float) */;
             return lessThan(xValue_, yValue_);
         }
@@ -902,6 +1232,12 @@ public final class MJBinaryNodeFactory {
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(xValue_, yValue_);
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            executeBool(frameValue);
+            return;
         }
 
         private boolean executeAndSpecialize(Object xValue, Object yValue) {
@@ -970,29 +1306,73 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active add(int, int) */;
             return add(xValue_, yValue_);
         }
 
         private Object executeGeneric_int_float1(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active add(int, float) */;
             return add(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_float2(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b100) != 0 /* is-active add(float, float) */;
             return add(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_int3(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1000) != 0 /* is-active add(float, int) */;
             return add(xValue_, yValue_);
         }
@@ -1027,15 +1407,15 @@ public final class MJBinaryNodeFactory {
         }
 
         @Override
-        public boolean executeBool(VirtualFrame frameValue) {
-            CompilerDirectives.transferToInterpreterAndInvalidate();
-            throw new AssertionError("Delegation failed.");
-        }
-
-        @Override
-        public float executeF32(VirtualFrame frameValue) {
+        public float executeF32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            float xValue_ = this.x_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return expectFloat(executeAndSpecialize(ex.getResult(), yValue));
+            }
             if ((state & 0b1000) == 0 /* only-active add(float, float) */ && (state & 0b1100) != 0  /* is-not add(float, float) && add(float, int) */) {
                 return executeF32_float5(frameValue, state, xValue_);
             } else if ((state & 0b100) == 0 /* only-active add(float, int) */ && (state & 0b1100) != 0  /* is-not add(float, float) && add(float, int) */) {
@@ -1045,19 +1425,29 @@ public final class MJBinaryNodeFactory {
             }
         }
 
-        private float executeF32_float5(VirtualFrame frameValue, int state, float xValue_) {
-            float yValue_ = this.y_.executeF32(frameValue);
+        private float executeF32_float5(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return expectFloat(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b100) != 0 /* is-active add(float, float) */;
             return add(xValue_, yValue_);
         }
 
-        private float executeF32_int6(VirtualFrame frameValue, int state, float xValue_) {
-            int yValue_ = this.y_.executeI32(frameValue);
+        private float executeF32_int6(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return expectFloat(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b1000) != 0 /* is-active add(float, int) */;
             return add(xValue_, yValue_);
         }
 
-        private float executeF32_generic7(VirtualFrame frameValue, int state, float xValue_) {
+        private float executeF32_generic7(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
             Object yValue_ = this.y_.executeGeneric(frameValue);
             if ((state & 0b100) != 0 /* is-active add(float, float) */ && yValue_ instanceof Float) {
                 float yValue__ = (float) yValue_;
@@ -1068,13 +1458,19 @@ public final class MJBinaryNodeFactory {
                 return add(xValue_, yValue__);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (float) executeAndSpecialize(xValue_, yValue_);
+            return expectFloat(executeAndSpecialize(xValue_, yValue_));
         }
 
         @Override
-        public int executeI32(VirtualFrame frameValue) {
+        public int executeI32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            int xValue_ = this.x_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return MJTypesGen.expectInteger(executeAndSpecialize(ex.getResult(), yValue));
+            }
             if ((state & 0b10) == 0 /* only-active add(int, int) */ && (state & 0b11) != 0  /* is-not add(int, int) && add(int, float) */) {
                 return executeI32_int8(frameValue, state, xValue_);
             } else if ((state & 0b1) == 0 /* only-active add(int, float) */ && (state & 0b11) != 0  /* is-not add(int, int) && add(int, float) */) {
@@ -1084,19 +1480,29 @@ public final class MJBinaryNodeFactory {
             }
         }
 
-        private int executeI32_int8(VirtualFrame frameValue, int state, int xValue_) {
-            int yValue_ = this.y_.executeI32(frameValue);
+        private int executeI32_int8(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b1) != 0 /* is-active add(int, int) */;
             return add(xValue_, yValue_);
         }
 
-        private int executeI32_float9(VirtualFrame frameValue, int state, int xValue_) {
-            float yValue_ = this.y_.executeF32(frameValue);
+        private int executeI32_float9(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b10) != 0 /* is-active add(int, float) */;
             return add(xValue_, yValue_);
         }
 
-        private int executeI32_generic10(VirtualFrame frameValue, int state, int xValue_) {
+        private int executeI32_generic10(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
             Object yValue_ = this.y_.executeGeneric(frameValue);
             if ((state & 0b1) != 0 /* is-active add(int, int) */ && yValue_ instanceof Integer) {
                 int yValue__ = (int) yValue_;
@@ -1107,7 +1513,25 @@ public final class MJBinaryNodeFactory {
                 return add(xValue_, yValue__);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (int) executeAndSpecialize(xValue_, yValue_);
+            return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, yValue_));
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            int state = state_;
+            try {
+                if ((state & 0b1100) == 0 /* only-active add(int, int) && add(int, float) */ && state != 0  /* is-not add(int, int) && add(int, float) && add(float, float) && add(float, int) */) {
+                    executeI32(frameValue);
+                    return;
+                } else if ((state & 0b11) == 0 /* only-active add(float, float) && add(float, int) */ && state != 0  /* is-not add(int, int) && add(int, float) && add(float, float) && add(float, int) */) {
+                    executeF32(frameValue);
+                    return;
+                }
+                executeGeneric(frameValue);
+                return;
+            } catch (UnexpectedResultException ex) {
+                return;
+            }
         }
 
         private Object executeAndSpecialize(Object xValue, Object yValue) {
@@ -1152,6 +1576,13 @@ public final class MJBinaryNodeFactory {
             return NodeCost.POLYMORPHIC;
         }
 
+        private static float expectFloat(Object value) throws UnexpectedResultException {
+            if (value instanceof Float) {
+                return (float) value;
+            }
+            throw new UnexpectedResultException(value);
+        }
+
         public static AddNode create(MJExpresionNode x, MJExpresionNode y) {
             return new AddNodeGen(x, y);
         }
@@ -1186,29 +1617,73 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active sub(int, int) */;
             return sub(xValue_, yValue_);
         }
 
         private Object executeGeneric_int_float1(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active sub(int, float) */;
             return sub(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_float2(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b100) != 0 /* is-active sub(float, float) */;
             return sub(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_int3(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1000) != 0 /* is-active sub(float, int) */;
             return sub(xValue_, yValue_);
         }
@@ -1243,15 +1718,15 @@ public final class MJBinaryNodeFactory {
         }
 
         @Override
-        public boolean executeBool(VirtualFrame frameValue) {
-            CompilerDirectives.transferToInterpreterAndInvalidate();
-            throw new AssertionError("Delegation failed.");
-        }
-
-        @Override
-        public float executeF32(VirtualFrame frameValue) {
+        public float executeF32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            float xValue_ = this.x_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return expectFloat(executeAndSpecialize(ex.getResult(), yValue));
+            }
             if ((state & 0b1000) == 0 /* only-active sub(float, float) */ && (state & 0b1100) != 0  /* is-not sub(float, float) && sub(float, int) */) {
                 return executeF32_float5(frameValue, state, xValue_);
             } else if ((state & 0b100) == 0 /* only-active sub(float, int) */ && (state & 0b1100) != 0  /* is-not sub(float, float) && sub(float, int) */) {
@@ -1261,19 +1736,29 @@ public final class MJBinaryNodeFactory {
             }
         }
 
-        private float executeF32_float5(VirtualFrame frameValue, int state, float xValue_) {
-            float yValue_ = this.y_.executeF32(frameValue);
+        private float executeF32_float5(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return expectFloat(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b100) != 0 /* is-active sub(float, float) */;
             return sub(xValue_, yValue_);
         }
 
-        private float executeF32_int6(VirtualFrame frameValue, int state, float xValue_) {
-            int yValue_ = this.y_.executeI32(frameValue);
+        private float executeF32_int6(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return expectFloat(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b1000) != 0 /* is-active sub(float, int) */;
             return sub(xValue_, yValue_);
         }
 
-        private float executeF32_generic7(VirtualFrame frameValue, int state, float xValue_) {
+        private float executeF32_generic7(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
             Object yValue_ = this.y_.executeGeneric(frameValue);
             if ((state & 0b100) != 0 /* is-active sub(float, float) */ && yValue_ instanceof Float) {
                 float yValue__ = (float) yValue_;
@@ -1284,13 +1769,19 @@ public final class MJBinaryNodeFactory {
                 return sub(xValue_, yValue__);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (float) executeAndSpecialize(xValue_, yValue_);
+            return expectFloat(executeAndSpecialize(xValue_, yValue_));
         }
 
         @Override
-        public int executeI32(VirtualFrame frameValue) {
+        public int executeI32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            int xValue_ = this.x_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return MJTypesGen.expectInteger(executeAndSpecialize(ex.getResult(), yValue));
+            }
             if ((state & 0b10) == 0 /* only-active sub(int, int) */ && (state & 0b11) != 0  /* is-not sub(int, int) && sub(int, float) */) {
                 return executeI32_int8(frameValue, state, xValue_);
             } else if ((state & 0b1) == 0 /* only-active sub(int, float) */ && (state & 0b11) != 0  /* is-not sub(int, int) && sub(int, float) */) {
@@ -1300,19 +1791,29 @@ public final class MJBinaryNodeFactory {
             }
         }
 
-        private int executeI32_int8(VirtualFrame frameValue, int state, int xValue_) {
-            int yValue_ = this.y_.executeI32(frameValue);
+        private int executeI32_int8(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b1) != 0 /* is-active sub(int, int) */;
             return sub(xValue_, yValue_);
         }
 
-        private int executeI32_float9(VirtualFrame frameValue, int state, int xValue_) {
-            float yValue_ = this.y_.executeF32(frameValue);
+        private int executeI32_float9(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b10) != 0 /* is-active sub(int, float) */;
             return sub(xValue_, yValue_);
         }
 
-        private int executeI32_generic10(VirtualFrame frameValue, int state, int xValue_) {
+        private int executeI32_generic10(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
             Object yValue_ = this.y_.executeGeneric(frameValue);
             if ((state & 0b1) != 0 /* is-active sub(int, int) */ && yValue_ instanceof Integer) {
                 int yValue__ = (int) yValue_;
@@ -1323,7 +1824,25 @@ public final class MJBinaryNodeFactory {
                 return sub(xValue_, yValue__);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (int) executeAndSpecialize(xValue_, yValue_);
+            return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, yValue_));
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            int state = state_;
+            try {
+                if ((state & 0b1100) == 0 /* only-active sub(int, int) && sub(int, float) */ && state != 0  /* is-not sub(int, int) && sub(int, float) && sub(float, float) && sub(float, int) */) {
+                    executeI32(frameValue);
+                    return;
+                } else if ((state & 0b11) == 0 /* only-active sub(float, float) && sub(float, int) */ && state != 0  /* is-not sub(int, int) && sub(int, float) && sub(float, float) && sub(float, int) */) {
+                    executeF32(frameValue);
+                    return;
+                }
+                executeGeneric(frameValue);
+                return;
+            } catch (UnexpectedResultException ex) {
+                return;
+            }
         }
 
         private Object executeAndSpecialize(Object xValue, Object yValue) {
@@ -1368,6 +1887,13 @@ public final class MJBinaryNodeFactory {
             return NodeCost.POLYMORPHIC;
         }
 
+        private static float expectFloat(Object value) throws UnexpectedResultException {
+            if (value instanceof Float) {
+                return (float) value;
+            }
+            throw new UnexpectedResultException(value);
+        }
+
         public static SubNode create(MJExpresionNode x, MJExpresionNode y) {
             return new SubNodeGen(x, y);
         }
@@ -1402,29 +1928,73 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active mul(int, int) */;
             return mul(xValue_, yValue_);
         }
 
         private Object executeGeneric_int_float1(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active mul(int, float) */;
             return mul(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_float2(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b100) != 0 /* is-active mul(float, float) */;
             return mul(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_int3(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1000) != 0 /* is-active mul(float, int) */;
             return mul(xValue_, yValue_);
         }
@@ -1459,15 +2029,15 @@ public final class MJBinaryNodeFactory {
         }
 
         @Override
-        public boolean executeBool(VirtualFrame frameValue) {
-            CompilerDirectives.transferToInterpreterAndInvalidate();
-            throw new AssertionError("Delegation failed.");
-        }
-
-        @Override
-        public float executeF32(VirtualFrame frameValue) {
+        public float executeF32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            float xValue_ = this.x_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return expectFloat(executeAndSpecialize(ex.getResult(), yValue));
+            }
             if ((state & 0b1000) == 0 /* only-active mul(float, float) */ && (state & 0b1100) != 0  /* is-not mul(float, float) && mul(float, int) */) {
                 return executeF32_float5(frameValue, state, xValue_);
             } else if ((state & 0b100) == 0 /* only-active mul(float, int) */ && (state & 0b1100) != 0  /* is-not mul(float, float) && mul(float, int) */) {
@@ -1477,19 +2047,29 @@ public final class MJBinaryNodeFactory {
             }
         }
 
-        private float executeF32_float5(VirtualFrame frameValue, int state, float xValue_) {
-            float yValue_ = this.y_.executeF32(frameValue);
+        private float executeF32_float5(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return expectFloat(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b100) != 0 /* is-active mul(float, float) */;
             return mul(xValue_, yValue_);
         }
 
-        private float executeF32_int6(VirtualFrame frameValue, int state, float xValue_) {
-            int yValue_ = this.y_.executeI32(frameValue);
+        private float executeF32_int6(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return expectFloat(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b1000) != 0 /* is-active mul(float, int) */;
             return mul(xValue_, yValue_);
         }
 
-        private float executeF32_generic7(VirtualFrame frameValue, int state, float xValue_) {
+        private float executeF32_generic7(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
             Object yValue_ = this.y_.executeGeneric(frameValue);
             if ((state & 0b100) != 0 /* is-active mul(float, float) */ && yValue_ instanceof Float) {
                 float yValue__ = (float) yValue_;
@@ -1500,13 +2080,19 @@ public final class MJBinaryNodeFactory {
                 return mul(xValue_, yValue__);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (float) executeAndSpecialize(xValue_, yValue_);
+            return expectFloat(executeAndSpecialize(xValue_, yValue_));
         }
 
         @Override
-        public int executeI32(VirtualFrame frameValue) {
+        public int executeI32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            int xValue_ = this.x_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return MJTypesGen.expectInteger(executeAndSpecialize(ex.getResult(), yValue));
+            }
             if ((state & 0b10) == 0 /* only-active mul(int, int) */ && (state & 0b11) != 0  /* is-not mul(int, int) && mul(int, float) */) {
                 return executeI32_int8(frameValue, state, xValue_);
             } else if ((state & 0b1) == 0 /* only-active mul(int, float) */ && (state & 0b11) != 0  /* is-not mul(int, int) && mul(int, float) */) {
@@ -1516,19 +2102,29 @@ public final class MJBinaryNodeFactory {
             }
         }
 
-        private int executeI32_int8(VirtualFrame frameValue, int state, int xValue_) {
-            int yValue_ = this.y_.executeI32(frameValue);
+        private int executeI32_int8(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b1) != 0 /* is-active mul(int, int) */;
             return mul(xValue_, yValue_);
         }
 
-        private int executeI32_float9(VirtualFrame frameValue, int state, int xValue_) {
-            float yValue_ = this.y_.executeF32(frameValue);
+        private int executeI32_float9(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b10) != 0 /* is-active mul(int, float) */;
             return mul(xValue_, yValue_);
         }
 
-        private int executeI32_generic10(VirtualFrame frameValue, int state, int xValue_) {
+        private int executeI32_generic10(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
             Object yValue_ = this.y_.executeGeneric(frameValue);
             if ((state & 0b1) != 0 /* is-active mul(int, int) */ && yValue_ instanceof Integer) {
                 int yValue__ = (int) yValue_;
@@ -1539,7 +2135,25 @@ public final class MJBinaryNodeFactory {
                 return mul(xValue_, yValue__);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (int) executeAndSpecialize(xValue_, yValue_);
+            return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, yValue_));
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            int state = state_;
+            try {
+                if ((state & 0b1100) == 0 /* only-active mul(int, int) && mul(int, float) */ && state != 0  /* is-not mul(int, int) && mul(int, float) && mul(float, float) && mul(float, int) */) {
+                    executeI32(frameValue);
+                    return;
+                } else if ((state & 0b11) == 0 /* only-active mul(float, float) && mul(float, int) */ && state != 0  /* is-not mul(int, int) && mul(int, float) && mul(float, float) && mul(float, int) */) {
+                    executeF32(frameValue);
+                    return;
+                }
+                executeGeneric(frameValue);
+                return;
+            } catch (UnexpectedResultException ex) {
+                return;
+            }
         }
 
         private Object executeAndSpecialize(Object xValue, Object yValue) {
@@ -1584,6 +2198,13 @@ public final class MJBinaryNodeFactory {
             return NodeCost.POLYMORPHIC;
         }
 
+        private static float expectFloat(Object value) throws UnexpectedResultException {
+            if (value instanceof Float) {
+                return (float) value;
+            }
+            throw new UnexpectedResultException(value);
+        }
+
         public static MulNode create(MJExpresionNode x, MJExpresionNode y) {
             return new MulNodeGen(x, y);
         }
@@ -1618,29 +2239,73 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active div(int, int) */;
             return div(xValue_, yValue_);
         }
 
         private Object executeGeneric_int_float1(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active div(int, float) */;
             return div(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_float2(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b100) != 0 /* is-active div(float, float) */;
             return div(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_int3(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1000) != 0 /* is-active div(float, int) */;
             return div(xValue_, yValue_);
         }
@@ -1675,15 +2340,15 @@ public final class MJBinaryNodeFactory {
         }
 
         @Override
-        public boolean executeBool(VirtualFrame frameValue) {
-            CompilerDirectives.transferToInterpreterAndInvalidate();
-            throw new AssertionError("Delegation failed.");
-        }
-
-        @Override
-        public float executeF32(VirtualFrame frameValue) {
+        public float executeF32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            float xValue_ = this.x_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return expectFloat(executeAndSpecialize(ex.getResult(), yValue));
+            }
             if ((state & 0b1000) == 0 /* only-active div(float, float) */ && (state & 0b1100) != 0  /* is-not div(float, float) && div(float, int) */) {
                 return executeF32_float5(frameValue, state, xValue_);
             } else if ((state & 0b100) == 0 /* only-active div(float, int) */ && (state & 0b1100) != 0  /* is-not div(float, float) && div(float, int) */) {
@@ -1693,19 +2358,29 @@ public final class MJBinaryNodeFactory {
             }
         }
 
-        private float executeF32_float5(VirtualFrame frameValue, int state, float xValue_) {
-            float yValue_ = this.y_.executeF32(frameValue);
+        private float executeF32_float5(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return expectFloat(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b100) != 0 /* is-active div(float, float) */;
             return div(xValue_, yValue_);
         }
 
-        private float executeF32_int6(VirtualFrame frameValue, int state, float xValue_) {
-            int yValue_ = this.y_.executeI32(frameValue);
+        private float executeF32_int6(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return expectFloat(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b1000) != 0 /* is-active div(float, int) */;
             return div(xValue_, yValue_);
         }
 
-        private float executeF32_generic7(VirtualFrame frameValue, int state, float xValue_) {
+        private float executeF32_generic7(VirtualFrame frameValue, int state, float xValue_) throws UnexpectedResultException {
             Object yValue_ = this.y_.executeGeneric(frameValue);
             if ((state & 0b100) != 0 /* is-active div(float, float) */ && yValue_ instanceof Float) {
                 float yValue__ = (float) yValue_;
@@ -1716,13 +2391,19 @@ public final class MJBinaryNodeFactory {
                 return div(xValue_, yValue__);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (float) executeAndSpecialize(xValue_, yValue_);
+            return expectFloat(executeAndSpecialize(xValue_, yValue_));
         }
 
         @Override
-        public int executeI32(VirtualFrame frameValue) {
+        public int executeI32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            int xValue_ = this.x_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return MJTypesGen.expectInteger(executeAndSpecialize(ex.getResult(), yValue));
+            }
             if ((state & 0b10) == 0 /* only-active div(int, int) */ && (state & 0b11) != 0  /* is-not div(int, int) && div(int, float) */) {
                 return executeI32_int8(frameValue, state, xValue_);
             } else if ((state & 0b1) == 0 /* only-active div(int, float) */ && (state & 0b11) != 0  /* is-not div(int, int) && div(int, float) */) {
@@ -1732,19 +2413,29 @@ public final class MJBinaryNodeFactory {
             }
         }
 
-        private int executeI32_int8(VirtualFrame frameValue, int state, int xValue_) {
-            int yValue_ = this.y_.executeI32(frameValue);
+        private int executeI32_int8(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b1) != 0 /* is-active div(int, int) */;
             return div(xValue_, yValue_);
         }
 
-        private int executeI32_float9(VirtualFrame frameValue, int state, int xValue_) {
-            float yValue_ = this.y_.executeF32(frameValue);
+        private int executeI32_float9(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             assert (state & 0b10) != 0 /* is-active div(int, float) */;
             return div(xValue_, yValue_);
         }
 
-        private int executeI32_generic10(VirtualFrame frameValue, int state, int xValue_) {
+        private int executeI32_generic10(VirtualFrame frameValue, int state, int xValue_) throws UnexpectedResultException {
             Object yValue_ = this.y_.executeGeneric(frameValue);
             if ((state & 0b1) != 0 /* is-active div(int, int) */ && yValue_ instanceof Integer) {
                 int yValue__ = (int) yValue_;
@@ -1755,7 +2446,25 @@ public final class MJBinaryNodeFactory {
                 return div(xValue_, yValue__);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (int) executeAndSpecialize(xValue_, yValue_);
+            return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, yValue_));
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            int state = state_;
+            try {
+                if ((state & 0b1100) == 0 /* only-active div(int, int) && div(int, float) */ && state != 0  /* is-not div(int, int) && div(int, float) && div(float, float) && div(float, int) */) {
+                    executeI32(frameValue);
+                    return;
+                } else if ((state & 0b11) == 0 /* only-active div(float, float) && div(float, int) */ && state != 0  /* is-not div(int, int) && div(int, float) && div(float, float) && div(float, int) */) {
+                    executeF32(frameValue);
+                    return;
+                }
+                executeGeneric(frameValue);
+                return;
+            } catch (UnexpectedResultException ex) {
+                return;
+            }
         }
 
         private Object executeAndSpecialize(Object xValue, Object yValue) {
@@ -1800,6 +2509,13 @@ public final class MJBinaryNodeFactory {
             return NodeCost.POLYMORPHIC;
         }
 
+        private static float expectFloat(Object value) throws UnexpectedResultException {
+            if (value instanceof Float) {
+                return (float) value;
+            }
+            throw new UnexpectedResultException(value);
+        }
+
         public static DivNode create(MJExpresionNode x, MJExpresionNode y) {
             return new DivNodeGen(x, y);
         }
@@ -1830,15 +2546,37 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active mod(int, int) */;
             return mod(xValue_, yValue_);
         }
 
         private Object executeGeneric_float_float1(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), yValue);
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(xValue_, ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active mod(float, float) */;
             return mod(xValue_, yValue_);
         }
@@ -1865,33 +2603,67 @@ public final class MJBinaryNodeFactory {
         }
 
         @Override
-        public boolean executeBool(VirtualFrame frameValue) {
-            CompilerDirectives.transferToInterpreterAndInvalidate();
-            throw new AssertionError("Delegation failed.");
-        }
-
-        @Override
-        public float executeF32(VirtualFrame frameValue) {
+        public float executeF32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            float xValue_ = this.x_.executeF32(frameValue);
-            float yValue_ = this.y_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return expectFloat(executeAndSpecialize(ex.getResult(), yValue));
+            }
+            float yValue_;
+            try {
+                yValue_ = this.y_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return expectFloat(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             if ((state & 0b10) != 0 /* is-active mod(float, float) */) {
                 return mod(xValue_, yValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (float) executeAndSpecialize(xValue_, yValue_);
+            return expectFloat(executeAndSpecialize(xValue_, yValue_));
         }
 
         @Override
-        public int executeI32(VirtualFrame frameValue) {
+        public int executeI32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            int xValue_ = this.x_.executeI32(frameValue);
-            int yValue_ = this.y_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object yValue = this.y_.executeGeneric(frameValue);
+                return MJTypesGen.expectInteger(executeAndSpecialize(ex.getResult(), yValue));
+            }
+            int yValue_;
+            try {
+                yValue_ = this.y_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, ex.getResult()));
+            }
             if ((state & 0b1) != 0 /* is-active mod(int, int) */) {
                 return mod(xValue_, yValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (int) executeAndSpecialize(xValue_, yValue_);
+            return MJTypesGen.expectInteger(executeAndSpecialize(xValue_, yValue_));
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            int state = state_;
+            try {
+                if ((state & 0b10) == 0 /* only-active mod(int, int) */ && state != 0  /* is-not mod(int, int) && mod(float, float) */) {
+                    executeI32(frameValue);
+                    return;
+                } else if ((state & 0b1) == 0 /* only-active mod(float, float) */ && state != 0  /* is-not mod(int, int) && mod(float, float) */) {
+                    executeF32(frameValue);
+                    return;
+                }
+                executeGeneric(frameValue);
+                return;
+            } catch (UnexpectedResultException ex) {
+                return;
+            }
         }
 
         private Object executeAndSpecialize(Object xValue, Object yValue) {
@@ -1924,6 +2696,13 @@ public final class MJBinaryNodeFactory {
                 return NodeCost.MONOMORPHIC;
             }
             return NodeCost.POLYMORPHIC;
+        }
+
+        private static float expectFloat(Object value) throws UnexpectedResultException {
+            if (value instanceof Float) {
+                return (float) value;
+            }
+            throw new UnexpectedResultException(value);
         }
 
         public static ModNode create(MJExpresionNode x, MJExpresionNode y) {

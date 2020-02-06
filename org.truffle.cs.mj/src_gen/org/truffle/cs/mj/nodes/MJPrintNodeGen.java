@@ -6,6 +6,7 @@ import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeCost;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import org.truffle.cs.mj.nodes.MJExpresionNode;
 import org.truffle.cs.mj.nodes.MJPrintNode;
 
@@ -32,13 +33,23 @@ public final class MJPrintNodeGen extends MJPrintNode {
     }
 
     private Object execute_int0(VirtualFrame frameValue, int state) {
-        int expressionValue_ = this.expression_.executeI32(frameValue);
+        int expressionValue_;
+        try {
+            expressionValue_ = this.expression_.executeI32(frameValue);
+        } catch (UnexpectedResultException ex) {
+            return executeAndSpecialize(ex.getResult());
+        }
         assert (state & 0b1) != 0 /* is-active printI(int) */;
         return printI(expressionValue_);
     }
 
     private Object execute_float1(VirtualFrame frameValue, int state) {
-        float expressionValue_ = this.expression_.executeF32(frameValue);
+        float expressionValue_;
+        try {
+            expressionValue_ = this.expression_.executeF32(frameValue);
+        } catch (UnexpectedResultException ex) {
+            return executeAndSpecialize(ex.getResult());
+        }
         assert (state & 0b10) != 0 /* is-active printF(float) */;
         return printF(expressionValue_);
     }

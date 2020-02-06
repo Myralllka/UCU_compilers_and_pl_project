@@ -20,15 +20,15 @@ public class MJRuntime {
 // parseRD(mjProgramRD);
 // parseRD(mjSimpletIfRD);
 // parseRD(mjSimpletWhileRD);
-// parseRD(test);
+        parseRD(ifProgram);
 // parseRD(ifProgram);
-        parseRD(divAlgorithm);
+// parseRD(divAlgorithm);
     }
 
     static String test = "program P {"//
 // + " void foo(int i, float j) {print(i+j);}" //
                     + " void main () int i; float f;{ "//
-                    + "     i = 24;"//
+                    + "     i = 24.6;"//
                     + "     f = 10.8;"//
                     + "     f++;"//
                     + "     i--;"//

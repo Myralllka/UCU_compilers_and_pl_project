@@ -1,7 +1,6 @@
 // CheckStyle: start generated
 package org.truffle.cs.mj.nodes;
 
-import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.dsl.GeneratedBy;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeCost;
@@ -25,15 +24,9 @@ public final class MJContstantFloatNodeGen extends MJContstantFloatNode {
     }
 
     @Override
-    public boolean executeBool(VirtualFrame frameValue) {
-        CompilerDirectives.transferToInterpreterAndInvalidate();
-        throw new AssertionError("Delegation failed.");
-    }
-
-    @Override
-    public int executeI32(VirtualFrame frameValue) {
-        CompilerDirectives.transferToInterpreterAndInvalidate();
-        throw new AssertionError("Delegation failed.");
+    public void executeVoid(VirtualFrame frameValue) {
+        executeF32(frameValue);
+        return;
     }
 
     @Override
