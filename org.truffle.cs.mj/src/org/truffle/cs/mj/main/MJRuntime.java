@@ -21,9 +21,23 @@ public class MJRuntime {
 // parseRD(mjSimpletIfRD);
 // parseRD(mjSimpletWhileRD);
         parseRD(ifProgram);
+// parseRD(test_f);
 // parseRD(ifProgram);
 // parseRD(divAlgorithm);
     }
+    static String test_f = ""//
+                    + "program Sample { "//
+                    + " void foo(int i) {\n" //
+                    + "     if (i > 0) {\n"//
+                    + "         return foo(i - 1);\n}\n" //
+                    + "     print(i);\n}\n"//
+// + " return 145;}" //
+                    + " void main(int i) int p; {\n"//
+                    + "     foo(i);\n"//
+// + " p = i + 1;\n"//
+// + " print(foo(p));\n"//
+                    + " }\n"//
+                    + "}";
 
     static String test = "program P {"//
 // + " void foo(int i, float j) {print(i+j);}" //
