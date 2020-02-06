@@ -8,7 +8,9 @@ import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import org.truffle.cs.mj.nodes.MJExpresionNode;
+import org.truffle.cs.mj.nodes.MJTypesGen;
 import org.truffle.cs.mj.nodes.MJUnaryNode;
 import org.truffle.cs.mj.nodes.MJUnaryNode.NegNode;
 import org.truffle.cs.mj.nodes.MJUnaryNode.NotNode;
@@ -29,7 +31,12 @@ public final class MJUnaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            boolean xValue_ = this.x_.executeBool(frameValue);
+            boolean xValue_;
+            try {
+                xValue_ = this.x_.executeBool(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(ex.getResult());
+            }
             if (state != 0 /* is-active not(boolean) */) {
                 return not(xValue_);
             }
@@ -40,12 +47,23 @@ public final class MJUnaryNodeFactory {
         @Override
         public boolean executeBool(VirtualFrame frameValue) {
             int state = state_;
-            boolean xValue_ = this.x_.executeBool(frameValue);
+            boolean xValue_;
+            try {
+                xValue_ = this.x_.executeBool(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(ex.getResult());
+            }
             if (state != 0 /* is-active not(boolean) */) {
                 return not(xValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(xValue_);
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            executeBool(frameValue);
+            return;
         }
 
         private boolean executeAndSpecialize(Object xValue) {
@@ -96,13 +114,23 @@ public final class MJUnaryNodeFactory {
         }
 
         private Object executeGeneric_int0(VirtualFrame frameValue, int state) {
-            int xValue_ = this.x_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active neg(int) */;
             return neg(xValue_);
         }
 
         private Object executeGeneric_float1(VirtualFrame frameValue, int state) {
-            float xValue_ = this.x_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(ex.getResult());
+            }
             assert (state & 0b10) != 0 /* is-active neg(float) */;
             return neg(xValue_);
         }
@@ -122,31 +150,53 @@ public final class MJUnaryNodeFactory {
         }
 
         @Override
-        public boolean executeBool(VirtualFrame frameValue) {
-            CompilerDirectives.transferToInterpreterAndInvalidate();
-            throw new AssertionError("Delegation failed.");
-        }
-
-        @Override
-        public float executeF32(VirtualFrame frameValue) {
+        public float executeF32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            float xValue_ = this.x_.executeF32(frameValue);
+            float xValue_;
+            try {
+                xValue_ = this.x_.executeF32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return expectFloat(executeAndSpecialize(ex.getResult()));
+            }
             if ((state & 0b10) != 0 /* is-active neg(float) */) {
                 return neg(xValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (float) executeAndSpecialize(xValue_);
+            return expectFloat(executeAndSpecialize(xValue_));
         }
 
         @Override
-        public int executeI32(VirtualFrame frameValue) {
+        public int executeI32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            int xValue_ = this.x_.executeI32(frameValue);
+            int xValue_;
+            try {
+                xValue_ = this.x_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return MJTypesGen.expectInteger(executeAndSpecialize(ex.getResult()));
+            }
             if ((state & 0b1) != 0 /* is-active neg(int) */) {
                 return neg(xValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return (int) executeAndSpecialize(xValue_);
+            return MJTypesGen.expectInteger(executeAndSpecialize(xValue_));
+        }
+
+        @Override
+        public void executeVoid(VirtualFrame frameValue) {
+            int state = state_;
+            try {
+                if ((state & 0b10) == 0 /* only-active neg(int) */ && state != 0  /* is-not neg(int) && neg(float) */) {
+                    executeI32(frameValue);
+                    return;
+                } else if ((state & 0b1) == 0 /* only-active neg(float) */ && state != 0  /* is-not neg(int) && neg(float) */) {
+                    executeF32(frameValue);
+                    return;
+                }
+                executeGeneric(frameValue);
+                return;
+            } catch (UnexpectedResultException ex) {
+                return;
+            }
         }
 
         private Object executeAndSpecialize(Object xValue) {
@@ -173,6 +223,13 @@ public final class MJUnaryNodeFactory {
                 return NodeCost.MONOMORPHIC;
             }
             return NodeCost.POLYMORPHIC;
+        }
+
+        private static float expectFloat(Object value) throws UnexpectedResultException {
+            if (value instanceof Float) {
+                return (float) value;
+            }
+            throw new UnexpectedResultException(value);
         }
 
         public static NegNode create(MJExpresionNode x) {

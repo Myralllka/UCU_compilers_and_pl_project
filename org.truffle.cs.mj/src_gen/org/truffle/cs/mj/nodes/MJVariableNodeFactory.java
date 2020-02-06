@@ -33,18 +33,9 @@ public final class MJVariableNodeFactory {
         }
 
         @Override
-        public boolean executeBool(VirtualFrame frameValue) {
-            return (boolean) executeGeneric(frameValue);
-        }
-
-        @Override
-        public float executeF32(VirtualFrame frameValue) {
-            return (float) executeGeneric(frameValue);
-        }
-
-        @Override
-        public int executeI32(VirtualFrame frameValue) {
-            return (int) executeGeneric(frameValue);
+        public void executeVoid(VirtualFrame frameValue) {
+            executeGeneric(frameValue);
+            return;
         }
 
         @Override

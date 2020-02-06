@@ -1,6 +1,7 @@
 package org.truffle.cs.mj.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
 public class MJWhileLoop extends MJStatementNode {
     @Child MJExpresionNode condition;
@@ -13,8 +14,13 @@ public class MJWhileLoop extends MJStatementNode {
 
     @Override
     public Object execute(VirtualFrame frame) {
-        while (condition.executeBool(frame)) {
-            loopBody.execute(frame);
+        try {
+            while (condition.executeBool(frame)) {
+                loopBody.execute(frame);
+            }
+        } catch (UnexpectedResultException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return null;
     }
