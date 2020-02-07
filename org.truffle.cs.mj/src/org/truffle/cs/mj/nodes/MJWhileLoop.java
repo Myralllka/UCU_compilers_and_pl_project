@@ -22,6 +22,7 @@ public class MJWhileLoop extends MJStatementNode {
                 try {
                     loopBody.execute(frame);
                 } catch (MJContinueException e) {
+                    continue;
                 }
 
             }

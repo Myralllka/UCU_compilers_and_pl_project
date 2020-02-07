@@ -62,11 +62,11 @@ public final class MJTypesGen extends MJTypes {
         throw new UnexpectedResultException(value);
     }
 
-    public static Double expectImplicitDouble(int state, Object value) throws UnexpectedResultException {
+    public static double expectImplicitDouble(int state, Object value) throws UnexpectedResultException {
         if ((state & 0b1) != 0 && value instanceof Integer) {
             return castDouble((int) value);
         } else if ((state & 0b10) != 0 && value instanceof Double) {
-            return (Double) value;
+            return (double) value;
         } else {
             throw new UnexpectedResultException(value);
         }
@@ -82,22 +82,22 @@ public final class MJTypesGen extends MJTypes {
              || value instanceof Double;
     }
 
-    public static Double asImplicitDouble(int state, Object value) {
+    public static double asImplicitDouble(int state, Object value) {
         if ((state & 0b1) != 0 && value instanceof Integer) {
             return castDouble((int) value);
         } else if ((state & 0b10) != 0 && value instanceof Double) {
-            return (Double) value;
+            return (double) value;
         } else {
             CompilerDirectives.transferToInterpreterAndInvalidate();
             throw new IllegalArgumentException("Illegal implicit source type.");
         }
     }
 
-    public static Double asImplicitDouble(Object value) {
+    public static double asImplicitDouble(Object value) {
         if (value instanceof Integer) {
             return castDouble((int) value);
         } else if (value instanceof Double) {
-            return (Double) value;
+            return (double) value;
         } else {
             throw new IllegalArgumentException("Illegal implicit source type.");
         }
