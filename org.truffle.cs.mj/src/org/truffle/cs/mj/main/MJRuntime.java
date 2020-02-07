@@ -21,12 +21,12 @@ public class MJRuntime {
 // parseRD(mjSimpletIfRD);
 // parseRD(mjSimpletWhileRD);
 // parseRD(ifProgram);
-        parseRD(test_f);
-        parseRD(mjSimpletWhile);
+// parseRD(test_f);
+// parseRD(mjSimpletWhile);
 // parseRD(ifProgram);
 // parseRD(test_f);
 // parseRD(ifProgram);
-// parseRD(divAlgorithm);
+        parseRD(divAlgorithm);
     }
 
     static String mjSimpletWhile = ""//
@@ -57,10 +57,10 @@ public class MJRuntime {
     static String test_f = ""//
                     + "program Sample { "//
                     + " void foo(int i) {\n" //
+                    + "     print(i);\n" //
                     + "     if (i > 0) {\n"//
                     + "         return foo(i - 1);\n" //
                     + "     }\n" //
-                    + "     print(i);\n" //
                     + "}\n"//
 
                     + " void main(int i) int p; {\n" //
@@ -171,8 +171,8 @@ public class MJRuntime {
                     + "             }" //
 
                     + "             void main (int a,int b){ " //
-                    + "                 print(flipSign(42));"//
-// + " print(mul(a,b));"//
+// + " print(flipSign(42));"//
+                    + " print(mul(a,b));"//
                     + "             }"//
                     + "}";
 

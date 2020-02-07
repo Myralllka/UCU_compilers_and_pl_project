@@ -398,9 +398,13 @@ public final class RecursiveDescentParser {
         while (sym == ident) {
             VarDecl();
         }
-        MJStatementNode block = Block();
-        currentFun = new MJFunction(name, block, currentFrameDescriptor);
+        currentFun = new MJFunction(name, null, currentFrameDescriptor);
         functions.add(currentFun);
+        MJStatementNode block = Block();
+
+// currentFun = new MJFunction(name, block, currentFrameDescriptor);
+// functions.add(currentFun);
+        getFunction(name).setBody(block);
         parameterNames = null;
         return currentFun;
     }
@@ -590,7 +594,7 @@ public final class RecursiveDescentParser {
                 scan();
                 MJExpresionNode retValue = null;
                 if (sym != semicolon) {
-                    retValue = Expr();
+                    retValue = Expr(); // debug
                 }
 // } else {
 // break;

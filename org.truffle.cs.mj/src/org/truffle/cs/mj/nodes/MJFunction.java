@@ -30,6 +30,10 @@ public class MJFunction extends RootNode {
         return null;
     }
 
+    public void setBody(MJStatementNode newBody) {
+        this.body = newBody;
+    }
+
     @Override
     public String getName() {
         return name;
