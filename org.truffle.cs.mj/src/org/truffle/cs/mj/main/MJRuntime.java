@@ -21,7 +21,7 @@ public class MJRuntime {
 // parseRD(mjSimpletIfRD);
 // parseRD(mjSimpletWhileRD);
 // parseRD(ifProgram);
-        parseRD(test_f);
+// parseRD(test_f);
         parseRD(mjSimpletWhile);
 // parseRD(ifProgram);
 // parseRD(test_f);
@@ -31,7 +31,7 @@ public class MJRuntime {
 
     static String mjSimpletWhile = ""//
                     + "program Sample { "//
-                    + "     void main(int i) int i;{\n"//
+                    + "     void main(int i){\n"//
                     + "         while(i > 0){\n"//
                     + "             i++;"//
                     + "             if (i > 100) {"//
@@ -47,7 +47,8 @@ public class MJRuntime {
                     + "     void main(int i) int p; {\n"//
                     + "         p = 0;\n"//
                     + "         while(p < i){\n"//
-                    + "             print(p);\n"//
+                    + "             print(p);"//
+                    + "             break;\n"//
                     + "             p = p + 1;\n"//
                     + "         }\n"//
                     + "         return p;\n"//

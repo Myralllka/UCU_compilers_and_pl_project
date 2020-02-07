@@ -45,6 +45,8 @@ import java.util.Map;
 
 import org.truffle.cs.mj.nodes.MJBinaryNodeFactory;
 import org.truffle.cs.mj.nodes.MJBlock;
+import org.truffle.cs.mj.nodes.MJBreakNode;
+import org.truffle.cs.mj.nodes.MJContinueNode;
 import org.truffle.cs.mj.nodes.MJContstantFloatNodeGen;
 import org.truffle.cs.mj.nodes.MJContstantIntNode;
 import org.truffle.cs.mj.nodes.MJContstantIntNodeGen;
@@ -300,40 +302,44 @@ public final class RecursiveDescentParser {
 
     /** ConstDecl = "final" Type ident "=" ( number | charConst ) ";" . */
     private void ConstDecl() {
-        check(final_);
-        Type();
-        check(ident);
-        check(assign);
-        if (sym == number) {
-            scan();
-        } else if (sym == charConst) {
-            scan();
-        } else {
-            throw new Error("Constant declaration");
-        }
-        check(semicolon);
+        throw new Error("Constants not implemented yet");
+// check(final_);
+// Type();
+// check(ident);
+// check(assign);
+// if (sym == number) {
+// scan();
+// } else if (sym == charConst) {
+// scan();
+// } else {
+// throw new Error("Constant declaration error");
+// }
+// check(semicolon);
     }
 
     /** VarDecl = Type ident { "," ident } ";" . */
     private void VarDecl() {
         Type();
         check(ident);
+
         while (sym == comma) {
             scan();
-            check(ident);
+            String name = Designator();
+            createLocalVarWrite(name, MJContstantIntNodeGen.create(0));
         }
         check(semicolon);
     }
 
     /** ClassDecl = "class" ident "{" { VarDecl } "}" . */
     private void ClassDecl() {
-        check(class_);
-        check(ident);
-        check(lbrace);
-        while (sym == ident) {
-            VarDecl();
-        }
-        check(rbrace);
+        throw new Error("Classes not implemented yet");
+// check(class_);
+// check(ident);
+// check(lbrace);
+// while (sym == ident) {
+// VarDecl();
+// }
+// check(rbrace);
     }
 
     /**
@@ -577,12 +583,14 @@ public final class RecursiveDescentParser {
             // ----- "break" ";"
             case break_:
                 scan();
+                currentParsStatement = new MJBreakNode();
                 check(semicolon);
                 break;
 
             // ----- "break" ";"
             case continue_:
                 scan();
+                currentParsStatement = new MJContinueNode();
                 check(semicolon);
                 break;
             // ----- "return" [ Expr ] ";"
@@ -592,9 +600,6 @@ public final class RecursiveDescentParser {
                 if (sym != semicolon) {
                     retValue = Expr();
                 }
-// } else {
-// break;
-// }
                 currentParsStatement = new MJReturnNode(retValue);
                 check(semicolon);
                 break;
