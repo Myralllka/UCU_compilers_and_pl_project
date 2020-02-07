@@ -19,12 +19,37 @@ public class MJRuntime {
 // parseRD(mjSimpleRD);
 // parseRD(mjProgramRD);
 // parseRD(mjSimpletIfRD);
-        parseRD(mjSimpletWhileRD);
+        parseRD(mjSimpletWhile);
 // parseRD(ifProgram);
 // parseRD(test_f);
 // parseRD(ifProgram);
 // parseRD(divAlgorithm);
     }
+
+    static String mjSimpletWhile = ""//
+                    + "program Sample { "//
+                    + "     void main(int i) int i;{\n"//
+                    + "         while(i > 0){\n"//
+                    + "             i++;"//
+                    + "             if (i > 100) {"//
+                    + "                 print(i);"//
+                    + "                 break;"//
+                    + "             }\n"//
+                    + "         }\n"//
+                    + "     }\n"//
+                    + "}";
+
+    static String mjSimpletWhileRD = ""//
+                    + "program Sample { "//
+                    + "     void main(int i) int p; {\n"//
+                    + "         p = 0;\n"//
+                    + "         while(p < i){\n"//
+                    + "             print(p);\n"//
+                    + "             p = p + 1;\n"//
+                    + "         }\n"//
+                    + "         return p;\n"//
+                    + "     }\n"//
+                    + "}";
 
     static String test_f = ""//
                     + "program Sample { "//
@@ -56,17 +81,6 @@ public class MJRuntime {
                     + "     } else {\n"//
                     + "         print(1);\n"//
                     + "     }\n"//
-                    + " }\n"//
-                    + "}";
-    static String mjSimpletWhileRD = ""//
-                    + "program Sample { "//
-                    + " void main(int i) int p; {\n"//
-                    + "     p = 0;\n"//
-                    + "     while(p < i){\n"//
-                    + " print(p);\n"//
-                    + "         p = p + 1;\n"//
-                    + "     }\n"//
-                    + "     return p;\n"//
                     + " }\n"//
                     + "}";
 
@@ -167,7 +181,7 @@ public class MJRuntime {
         CallTarget callTarget = runtime.createCallTarget(parser.getMain());
         for (int i = 0; i < 10; i++) {
 // System.out.println(callTarget.call(i));
-            callTarget.call(i, i + 1000);
+            callTarget.call(i);
         }
     }
 
