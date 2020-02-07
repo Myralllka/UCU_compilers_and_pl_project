@@ -22,33 +22,36 @@ public class MJRuntime {
 // parseRD(mjSimpletWhileRD);
 // parseRD(ifProgram);
 // parseRD(test_f);
-        parseRD(mjSimpletWhile);
+        parseRD(factorial);
 // parseRD(ifProgram);
 // parseRD(test_f);
 // parseRD(ifProgram);
 // parseRD(divAlgorithm);
     }
 
-    static String mjSimpletWhile = ""//
+    static String factorial = ""//
                     + "program Sample { "//
+                    + ""//
+                    + "     int func(int i){"//
+                    + "             if (i == 1){return 1;}"//
+                    + "             else "//
+                    + "             if (i == 2){"//
+                    + "                 return 1;} "//
+                    + "             else {"//
+                    + "                 return func(i-2) + func(i-1);"//
+                    + "             }"//
+                    + "         }"//
                     + "     void main(int i){\n"//
-                    + "         while(i > 0){\n"//
-                    + "             i++;"//
-                    + "             if (i > 100) {"//
-                    + "                 print(i);"//
-                    + "                 break;"//
-                    + "             }\n"//
-                    + "         }\n"//
+                    + "         print(func(6));"//
                     + "     }\n"//
                     + "}";
 
     static String mjSimpletWhileRD = ""//
                     + "program Sample { "//
                     + "     void main(int i) int p; {\n"//
-                    + "         p = 0;\n"//
-                    + "         while(p < i){\n"//
+                    + "         p = 123;\n"//
+                    + "         while(p < 1000){\n"//
                     + "             print(p);"//
-                    + "             break;\n"//
                     + "             p = p + 1;\n"//
                     + "         }\n"//
                     + "         return p;\n"//
