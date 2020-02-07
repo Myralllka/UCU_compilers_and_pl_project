@@ -1,16 +1,21 @@
 package org.truffle.cs.mj.nodes;
 
+import java.util.concurrent.locks.Condition;
+
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import com.oracle.truffle.api.profiles.ConditionProfile;
 
 public class MJIfNode extends MJStatementNode {
 
-    @Child MJExpresionNode condition;
+    @Child MJExpresionNode conditionNode;
     @Child MJStatementNode trueBranch;
     @Child MJStatementNode falseBranch;
 
-    public MJIfNode(MJExpresionNode condition, MJStatementNode trueBranch, MJStatementNode falseBranch) {
-        this.condition = condition;
+    final ConditionProfile condition = ConditionProfile.createCountingProfile();
+
+    public MJIfNode(MJExpresionNode conditionNode, MJStatementNode trueBranch, MJStatementNode falseBranch) {
+        this.conditionNode = conditionNode;
         this.trueBranch = trueBranch;
         this.falseBranch = falseBranch;
     }
@@ -18,7 +23,7 @@ public class MJIfNode extends MJStatementNode {
     @Override
     public Object execute(VirtualFrame frame) {
         try {
-            if (condition.executeBool(frame)) {
+            if (condition.profile(conditionNode.executeBool(frame))) {
                 return trueBranch.execute(frame);
             }
         } catch (UnexpectedResultException e) {

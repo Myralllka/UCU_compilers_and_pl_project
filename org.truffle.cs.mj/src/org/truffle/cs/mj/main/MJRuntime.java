@@ -22,9 +22,37 @@ public class MJRuntime {
 // parseRD(mjSimpletWhileRD);
 // parseRD(ifProgram);
         parseRD(test_f);
+        parseRD(mjSimpletWhile);
+// parseRD(ifProgram);
+// parseRD(test_f);
 // parseRD(ifProgram);
 // parseRD(divAlgorithm);
     }
+
+    static String mjSimpletWhile = ""//
+                    + "program Sample { "//
+                    + "     void main(int i) int i;{\n"//
+                    + "         while(i > 0){\n"//
+                    + "             i++;"//
+                    + "             if (i > 100) {"//
+                    + "                 print(i);"//
+                    + "                 break;"//
+                    + "             }\n"//
+                    + "         }\n"//
+                    + "     }\n"//
+                    + "}";
+
+    static String mjSimpletWhileRD = ""//
+                    + "program Sample { "//
+                    + "     void main(int i) int p; {\n"//
+                    + "         p = 0;\n"//
+                    + "         while(p < i){\n"//
+                    + "             print(p);\n"//
+                    + "             p = p + 1;\n"//
+                    + "         }\n"//
+                    + "         return p;\n"//
+                    + "     }\n"//
+                    + "}";
 
     static String test_f = ""//
                     + "program Sample { "//
@@ -40,25 +68,6 @@ public class MJRuntime {
 // + " p = i + 1;\n"//
 // + " print(foo(p));\n"//
                     + " }\n"//
-                    + "}";
-
-    static String test = "program P {"//
-// + " void foo(int i, float j) {print(i+j);}" //
-                    + " void main () int i; float f;{ "//
-                    + "     i = 24.6;"//
-                    + "     f = 10.8;"//
-                    + "     f++;"//
-                    + "     i--;"//
-                    + "     print(f);"//
-                    + "     print(-i);"//
-                    + "     i+=100/10;"//
-// + " print(f);"//
-                    + "     print(i);"//
-// + " print(1 - 2);"//
-// + " print(1.0 - 2);"//
-// + " print(1 - 2.0);"//
-// + " print(1.0 - 2.0);"//
-                    + " }"//
                     + "}";
 
     static String mjSimpleRD = ""//
@@ -77,17 +86,6 @@ public class MJRuntime {
                     + "     } else {\n"//
                     + "         print(1);\n"//
                     + "     }\n"//
-                    + " }\n"//
-                    + "}";
-    static String mjSimpletWhileRD = ""//
-                    + "program Sample { "//
-                    + " void main(int i) int p; {\n"//
-                    + "     p = 0;\n"//
-                    + "     while(p < i){\n"//
-// + " print(p);\n"//
-                    + "         p = p + 1;\n"//
-                    + "     }\n"//
-                    + "     return p;\n"//
                     + " }\n"//
                     + "}";
 
