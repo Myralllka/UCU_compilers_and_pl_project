@@ -8,8 +8,8 @@ public class Token {
     public enum Kind {
 
         // @formatter:off
-        tr("true"),
-        fl("false"),
+        true_("true"),
+        false_("false"),
 		none("none"),
 		ident("identifier"),
 		number("number"),

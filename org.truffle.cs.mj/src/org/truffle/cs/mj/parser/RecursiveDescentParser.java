@@ -395,7 +395,6 @@ public final class RecursiveDescentParser {
         }
         check(ident);
         String name = t.str;
-
         check(lpar);
         if (sym == ident) {
             parameterNames = FormPars();
@@ -406,12 +405,13 @@ public final class RecursiveDescentParser {
         }
         currentFun = new MJFunction(name, null, currentFrameDescriptor);
         functions.add(currentFun);
+
         MJStatementNode block = Block();
 
 // currentFun = new MJFunction(name, block, currentFrameDescriptor);
 // functions.add(currentFun);
         getFunction(name).setBody(block);
-        parameterNames = null;
+// parameterNames = null;
         return currentFun;
     }
 
@@ -789,7 +789,6 @@ public final class RecursiveDescentParser {
                     expr = new MJInvokeNode(callTarget,
                                     parameters.toArray(new MJExpresionNode[parameters.size()]));
                 } else {
-
                     int index = parameterNames != null ? parameterNames.indexOf(varname) : -1;
                     if (index >= 0) {
                         expr = new MJReadParameterNode(index);
