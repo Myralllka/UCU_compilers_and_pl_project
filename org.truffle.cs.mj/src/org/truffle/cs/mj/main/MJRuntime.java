@@ -26,9 +26,35 @@ public class MJRuntime {
 // parseRD(ifProgram);
 // parseRD(test_f);
 // parseRD(ifProgram);
-        parseRD(divAlgorithm);
+// parseRD(divAlgorithm);
 // parseRD(absTets);
+        parseRD(staticTypingTets);
     }
+
+    static String staticTypingTets = ""//
+                    + "program Sample { "//
+                    + " void pp(int i, float f, bool b) {\n"//
+                    + "     print(b);\n"//
+                    + "     print(i);\n"//
+                    + "     print(f);\n"//
+                    + " }\n"//
+                    + "     void main(int arg) int i; float f; bool b; {\n"//
+                    + "         i = 6;"//
+// + " f = 7.0;"//
+
+                    + " print(i);\n"//
+// + " print(f);\n"//
+// + " b = true;"//
+// + " pp(i, f, b);"//
+
+// + " i = 3.0;"//
+// + " f = 5;"//
+// + " print(i);\n"//
+// + " print(f);\n"//
+// + " b = 23;"//
+// + " pp(i, f, b);"//
+                    + "     }\n"//
+                    + "}";
 
     static String absTets = ""//
                     + "program Sample { "//
@@ -128,6 +154,7 @@ public class MJRuntime {
                     + "                 }"//
                     + "             }"//
                     + "}";
+
     static String ifProgram = "program P {"//
                     + "             void foo(int i,int j) {"//
                     + "                 if(i>j) {"//

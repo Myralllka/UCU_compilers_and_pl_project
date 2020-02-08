@@ -63,6 +63,7 @@ import org.truffle.cs.mj.nodes.MJStatementNode;
 import org.truffle.cs.mj.nodes.MJUnaryNodeFactory;
 import org.truffle.cs.mj.nodes.MJVariableNodeFactory;
 import org.truffle.cs.mj.nodes.MJWhileLoop;
+import org.truffle.cs.mj.nodes.TypeFactory;
 
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.Truffle;
@@ -320,12 +321,18 @@ public final class RecursiveDescentParser {
 
     /** VarDecl = Type ident { "," ident } ";" . */
     private void VarDecl() {
+// TypeFactory typeFactory = Type();
         Type();
-        check(ident);
+// check(ident);
 
+        String name = Designator();
+        createLocalVarWrite(name, MJContstantIntNodeGen.create(0));
         while (sym == comma) {
             scan();
-            String name = Designator();
+
+            name = Designator();
+            // TODO: implement Void and Boolean factories
+// createLocalVarWrite(name, typeFactory.create(0));
             createLocalVarWrite(name, MJContstantIntNodeGen.create(0));
         }
         check(semicolon);
@@ -361,9 +368,17 @@ public final class RecursiveDescentParser {
         return MJVariableNodeFactory.MJWriteLocalVariableNodeGen.create(value, frameSlot);
     }
 
+    public MJStatementNode writeLocalVarWrite(String name, MJExpresionNode value) {
+        FrameSlot frameSlot = slots.get(name);
+        if (frameSlot == null) {
+            throw new Error("Local variable " + name + "is not initialised!");
+        }
+        return MJVariableNodeFactory.MJWriteLocalVariableNodeGen.create(value, frameSlot);
+    }
+
     public List<MJFunction> functions = new ArrayList<>();
 
-    public HashMap<MJFunction, CallTarget> callAble = new HashMap<MJFunction, CallTarget>();
+    public HashMap<MJFunction, CallTarget> callAble = new HashMap<>();
 
     public MJFunction getFunction(String Name) {
         for (MJFunction f : functions) {
@@ -420,7 +435,7 @@ public final class RecursiveDescentParser {
 
     /** FormPars = Type ident { "," Type ident } . */
     private ArrayList<String> FormPars() {
-        ArrayList<String> parNames = new ArrayList<String>();
+        ArrayList<String> parNames = new ArrayList<>();
         Type();
         check(ident);
         parNames.add(t.str);
@@ -435,11 +450,26 @@ public final class RecursiveDescentParser {
 
     /** Type = ident . */
     private void Type() {
+// private Class<TypeFactory> Type() {
+// switch (la.str) {
+// case "void":
+// return null;
+// case "int":
+// return MJContstantIntNodeGen.class;
+// case "float":
+// return MJContstantFloatNodeGen.class;
+// case "boolean":
+// return null;
+// default:
+// throw new Error(la.str + " this type is not suported yet!");
+// }
+
         check(ident);
         if (sym == lbrack) {
             scan();
             check(rbrack);
         }
+// return null;
     }
 
     /** Block = "{" { Statement } "}" . */
@@ -487,7 +517,7 @@ public final class RecursiveDescentParser {
                 switch (sym) {
                     case assign:
                         Assignop();
-                        currentParsStatement = createLocalVarWrite(des, Expr());
+                        currentParsStatement = writeLocalVarWrite(des, Expr());
                         break;
                     case plusas:
                         Assignop();
@@ -495,7 +525,7 @@ public final class RecursiveDescentParser {
                             throw new Error("Variable " + des + " does not exist");
                         }
                         expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
-                        currentParsStatement = createLocalVarWrite(des, MJBinaryNodeFactory.AddNodeGen.create(expr, Expr()));
+                        currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.AddNodeGen.create(expr, Expr()));
                         break;
                     case minusas:
                         Assignop();
@@ -503,7 +533,7 @@ public final class RecursiveDescentParser {
                             throw new Error("Variable " + des + " does not exist");
                         }
                         expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
-                        currentParsStatement = createLocalVarWrite(des, MJBinaryNodeFactory.SubNodeGen.create(expr, Expr()));
+                        currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.SubNodeGen.create(expr, Expr()));
                         break;
                     case timesas:
                         Assignop();
@@ -511,7 +541,7 @@ public final class RecursiveDescentParser {
                             throw new Error("Variable " + des + " does not exist");
                         }
                         expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
-                        currentParsStatement = createLocalVarWrite(des, MJBinaryNodeFactory.MulNodeGen.create(expr, Expr()));
+                        currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.MulNodeGen.create(expr, Expr()));
                         break;
                     case slashas:
                         Assignop();
@@ -519,7 +549,7 @@ public final class RecursiveDescentParser {
                             throw new Error("Variable " + des + " does not exist");
                         }
                         expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
-                        currentParsStatement = createLocalVarWrite(des, MJBinaryNodeFactory.DivNodeGen.create(expr, Expr()));
+                        currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.DivNodeGen.create(expr, Expr()));
                         break;
                     case remas:
                         Assignop();
@@ -527,7 +557,7 @@ public final class RecursiveDescentParser {
                             throw new Error("Variable " + des + " does not exist");
                         }
                         expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
-                        currentParsStatement = createLocalVarWrite(des, MJBinaryNodeFactory.ModNodeGen.create(expr, Expr()));
+                        currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.ModNodeGen.create(expr, Expr()));
                         break;
                     case lpar:
                         List<MJExpresionNode> parameters = ActPars();
@@ -547,7 +577,7 @@ public final class RecursiveDescentParser {
                             throw new Error("Variable " + des + " does not exist");
                         }
                         expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
-                        currentParsStatement = createLocalVarWrite(des, MJBinaryNodeFactory.AddNodeGen.create(expr, MJContstantIntNodeGen.create(1)));
+                        currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.AddNodeGen.create(expr, MJContstantIntNodeGen.create(1)));
                         break;
                     case mminus:
                         scan();
@@ -555,7 +585,7 @@ public final class RecursiveDescentParser {
                             throw new Error("Variable " + des + " does not exist");
                         }
                         expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
-                        currentParsStatement = createLocalVarWrite(des, MJBinaryNodeFactory.SubNodeGen.create(expr, MJContstantIntNodeGen.create(1)));
+                        currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.SubNodeGen.create(expr, MJContstantIntNodeGen.create(1)));
                         break;
                     default:
                         throw new Error("Designator Follow");
@@ -645,7 +675,7 @@ public final class RecursiveDescentParser {
 
     /** ActPars = "(" [ Expr { "," Expr } ] ")" . */
     private List<MJExpresionNode> ActPars() {
-        ArrayList<MJExpresionNode> exprs = new ArrayList<MJExpresionNode>();
+        ArrayList<MJExpresionNode> exprs = new ArrayList<>();
         check(lpar);
         if (firstExpr.contains(sym)) {
             for (;;) {
@@ -794,7 +824,11 @@ public final class RecursiveDescentParser {
                     if (index >= 0) {
                         expr = new MJReadParameterNode(index);
                     } else {
-                        expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(varname));
+                        FrameSlot localVar = slots.get(varname);
+                        if (localVar == null) {
+                            throw new Error("Variable " + varname + " not found!");
+                        }
+                        expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(localVar);
                     }
 
                 }
