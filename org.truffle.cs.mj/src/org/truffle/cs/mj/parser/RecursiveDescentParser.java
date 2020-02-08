@@ -467,6 +467,7 @@ public final class RecursiveDescentParser {
         check(ident);
         if (sym == lbrack) {
             scan();
+
             check(rbrack);
         }
 // return null;

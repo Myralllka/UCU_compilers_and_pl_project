@@ -225,7 +225,7 @@ public class MJRuntime {
         TruffleRuntime runtime = Truffle.getRuntime();
         System.out.println("Calling main function...");
         CallTarget callTarget = runtime.createCallTarget(parser.getMain());
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1000; i++) {
 // System.out.println(callTarget.call(i));
             callTarget.call(i, i + 1000);
         }
