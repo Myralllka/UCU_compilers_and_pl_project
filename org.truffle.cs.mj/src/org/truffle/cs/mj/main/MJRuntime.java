@@ -22,11 +22,11 @@ public class MJRuntime {
 // parseRD(mjSimpletWhileRD);
 // parseRD(ifProgram);
 // parseRD(test_f);
-        parseRD(mjSimpletWhile);
+// parseRD(mjSimpletWhile);
 // parseRD(ifProgram);
 // parseRD(test_f);
 // parseRD(ifProgram);
-// parseRD(divAlgorithm);
+        parseRD(divAlgorithm);
     }
 
     static String mjSimpletWhile = ""//
@@ -172,8 +172,8 @@ public class MJRuntime {
                     + "             }" //
 
                     + "             void main (int a,int b){ " //
-                    + "                 print(flipSign(42));"//
-// + " print(mul(a,b));"//
+// + " print(flipSign(42));"//
+                    + " print(mul(a,b));"//
                     + "             }"//
                     + "}";
 
