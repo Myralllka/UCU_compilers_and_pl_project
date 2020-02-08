@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.truffle.cs.mj.nodes.MJAbsNodeGen;
 import org.truffle.cs.mj.nodes.MJBinaryNodeFactory;
 import org.truffle.cs.mj.nodes.MJBlock;
 import org.truffle.cs.mj.nodes.MJBreakNode;
@@ -773,7 +774,7 @@ public final class RecursiveDescentParser {
             case abs:
                 scan();
                 check(lpar);
-                Expr();
+                expr = MJAbsNodeGen.create(Expr());
                 check(rpar);
                 break;
             case ident:
@@ -814,14 +815,15 @@ public final class RecursiveDescentParser {
                 scan();
                 break;
             case new_:
-                scan();
-                check(ident);
-                if (sym == lbrack) {
-                    scan();
-                    Expr();
-                    check(rbrack);
-                }
-                break;
+                throw new Error("Unsuported yet");
+// scan();
+// check(ident);
+// if (sym == lbrack) {
+// scan();
+// Expr();
+// check(rbrack);
+// }
+// break;
             case lpar:
                 scan();
                 Expr();

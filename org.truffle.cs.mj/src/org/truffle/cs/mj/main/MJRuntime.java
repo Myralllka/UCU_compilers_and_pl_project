@@ -27,7 +27,18 @@ public class MJRuntime {
 // parseRD(test_f);
 // parseRD(ifProgram);
         parseRD(divAlgorithm);
+// parseRD(absTets);
     }
+
+    static String absTets = ""//
+                    + "program Sample { "//
+                    + "     void main(int i){\n"//
+                    + "         print(abs(6));"//
+                    + "         print(abs(-6));"//
+                    + "         print(abs(6.1));"//
+                    + "         print(abs(-6.1));"//
+                    + "     }\n"//
+                    + "}";
 
     static String factorial = ""//
                     + "program Sample { "//
@@ -175,8 +186,7 @@ public class MJRuntime {
                     + "             }" //
 
                     + "             void main (int a,int b){ " //
-// + " print(flipSign(42));"//
-                    + " print(mul(a,b));"//
+                    + "                 print(mul(a,b));"//
                     + "             }"//
                     + "}";
 
