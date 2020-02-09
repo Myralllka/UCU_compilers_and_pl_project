@@ -48,6 +48,7 @@ import org.truffle.cs.mj.nodes.MJBinaryNodeFactory;
 import org.truffle.cs.mj.nodes.MJBlock;
 import org.truffle.cs.mj.nodes.MJBreakNode;
 import org.truffle.cs.mj.nodes.MJContinueNode;
+import org.truffle.cs.mj.nodes.MJContstantBooleanNodeGen;
 import org.truffle.cs.mj.nodes.MJContstantFloatNodeGen;
 import org.truffle.cs.mj.nodes.MJContstantIntNode;
 import org.truffle.cs.mj.nodes.MJContstantIntNodeGen;
@@ -63,7 +64,7 @@ import org.truffle.cs.mj.nodes.MJStatementNode;
 import org.truffle.cs.mj.nodes.MJUnaryNodeFactory;
 import org.truffle.cs.mj.nodes.MJVariableNodeFactory;
 import org.truffle.cs.mj.nodes.MJWhileLoop;
-import org.truffle.cs.mj.nodes.TypeFactory;
+import org.truffle.cs.mj.parser.Token.Kind;
 
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.Truffle;
@@ -319,21 +320,29 @@ public final class RecursiveDescentParser {
 // check(semicolon);
     }
 
+    private static MJExpresionNode getDefaultTypeInstance(String type) {
+        switch (type) {
+            case "int":
+                return MJContstantIntNodeGen.create(0);
+            case "float":
+                return MJContstantFloatNodeGen.create(0);
+            case "boolean":
+                return MJContstantBooleanNodeGen.create(false);
+            default:
+                throw new Error(type + " this type is not suported yet!");
+        }
+    }
+
     /** VarDecl = Type ident { "," ident } ";" . */
     private void VarDecl() {
-// TypeFactory typeFactory = Type();
-        Type();
-// check(ident);
-
+        String typeName = Type();
         String name = Designator();
-        createLocalVarWrite(name, MJContstantIntNodeGen.create(0));
+        createLocalVarWrite(name, getDefaultTypeInstance(typeName));
+
         while (sym == comma) {
             scan();
-
             name = Designator();
-            // TODO: implement Void and Boolean factories
-// createLocalVarWrite(name, typeFactory.create(0));
-            createLocalVarWrite(name, MJContstantIntNodeGen.create(0));
+            createLocalVarWrite(name, getDefaultTypeInstance(typeName));
         }
         check(semicolon);
     }
@@ -350,11 +359,6 @@ public final class RecursiveDescentParser {
 // check(rbrace);
     }
 
-    /**
-     * MethodDecl = <br>
-     * ( Type | "void" ) ident "(" [ FormPars ] ")" <br>
-     * ( ";" | { VarDecl } Block ) .
-     */
     FrameDescriptor currentFrameDescriptor;
 
     public Map<String, FrameSlot> slots = new HashMap<>();
@@ -400,6 +404,11 @@ public final class RecursiveDescentParser {
 
     MJFunction currentFun = null;
 
+    /**
+     * MethodDecl = <br>
+     * ( Type | "void" ) ident "(" [ FormPars ] ")" <br>
+     * ( ";" | { VarDecl } Block ) .
+     */
     private MJFunction MethodDecl() {
         currentFrameDescriptor = new FrameDescriptor();
         if (sym == ident) {
@@ -424,14 +433,9 @@ public final class RecursiveDescentParser {
 
         MJStatementNode block = Block();
 
-// currentFun = new MJFunction(name, block, currentFrameDescriptor);
-// functions.add(currentFun);
         getFunction(name).setBody(block);
-// parameterNames = null;
         return currentFun;
     }
-
-// private ArrayList<String> parametersNames;
 
     /** FormPars = Type ident { "," Type ident } . */
     private ArrayList<String> FormPars() {
@@ -449,28 +453,15 @@ public final class RecursiveDescentParser {
     }
 
     /** Type = ident . */
-    private void Type() {
-// private Class<TypeFactory> Type() {
-// switch (la.str) {
-// case "void":
-// return null;
-// case "int":
-// return MJContstantIntNodeGen.class;
-// case "float":
-// return MJContstantFloatNodeGen.class;
-// case "boolean":
-// return null;
-// default:
-// throw new Error(la.str + " this type is not suported yet!");
-// }
-
+    private String Type() {
+        String type = la.str;
         check(ident);
         if (sym == lbrack) {
             scan();
 
             check(rbrack);
         }
-// return null;
+        return type;
     }
 
     /** Block = "{" { Statement } "}" . */
@@ -715,6 +706,10 @@ public final class RecursiveDescentParser {
     /** CondFact = Expr Relop Expr . */
     private MJExpresionNode CondFact() {
         MJExpresionNode a = Expr();
+        if (a instanceof MJContstantBooleanNodeGen) {
+            return a;
+        } /// ..................................................................
+
         CompOp comp = Relop();
         switch (comp) {
             case ne:
@@ -744,11 +739,16 @@ public final class RecursiveDescentParser {
     /** Expr = [ "-" ] Term { Addop Term } . */
     private MJExpresionNode Expr() {
         MJExpresionNode expr = null;
-// boolean neg = false;
+
         if (sym == minus) {
             scan();
-// neg = true;
             expr = MJUnaryNodeFactory.NegNodeGen.create(Term());
+        } else if (sym == Kind.true_) {
+            scan();
+            return MJContstantBooleanNodeGen.create(true);
+        } else if (sym == Kind.false_) {
+            scan();
+            return MJContstantBooleanNodeGen.create(false);
         } else {
             expr = Term();
         }

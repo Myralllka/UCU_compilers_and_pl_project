@@ -33,26 +33,20 @@ public class MJRuntime {
 
     static String staticTypingTets = ""//
                     + "program Sample { "//
-                    + " void pp(int i, float f, bool b) {\n"//
+                    + " void pp(int i, float f, boolean b) {\n"//
                     + "     print(b);\n"//
                     + "     print(i);\n"//
                     + "     print(f);\n"//
                     + " }\n"//
-                    + "     void main(int arg) int i; float f; bool b; {\n"//
+                    + "     void main(int arg) int i; float f; boolean b; {\n"//
                     + "         i = 6;"//
-// + " f = 7.0;"//
-
-                    + " print(i);\n"//
-// + " print(f);\n"//
-// + " b = true;"//
-// + " pp(i, f, b);"//
-
-// + " i = 3.0;"//
+                    + "         f = 7.0;"//
+                    + "         b = true;"//
+                    + "         pp(i, f, b);"//
+                    + " i = 3.0;"//
 // + " f = 5;"//
-// + " print(i);\n"//
-// + " print(f);\n"//
 // + " b = 23;"//
-// + " pp(i, f, b);"//
+                    + " pp(i, f, b);"//
                     + "     }\n"//
                     + "}";
 
@@ -225,7 +219,7 @@ public class MJRuntime {
         TruffleRuntime runtime = Truffle.getRuntime();
         System.out.println("Calling main function...");
         CallTarget callTarget = runtime.createCallTarget(parser.getMain());
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10; i++) {
 // System.out.println(callTarget.call(i));
             callTarget.call(i, i + 1000);
         }

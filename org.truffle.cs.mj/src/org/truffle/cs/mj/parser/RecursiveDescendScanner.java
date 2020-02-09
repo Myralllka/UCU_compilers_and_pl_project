@@ -52,6 +52,8 @@ public final class RecursiveDescendScanner {
         keywords.put(Kind.void_.label(), Kind.void_);
         keywords.put(Kind.while_.label(), Kind.while_);
         keywords.put(Kind.abs.label(), Kind.abs);
+        keywords.put(Kind.true_.label(), Kind.true_);
+        keywords.put(Kind.false_.label(), Kind.false_);
     }
 
     /**
@@ -314,8 +316,8 @@ public final class RecursiveDescendScanner {
                 break;
             default:
                 throw new Error("Invalid char " + ch);
-                // nextCh();
-                // break;
+            // nextCh();
+            // break;
         } // end switch
         return t;
     }
