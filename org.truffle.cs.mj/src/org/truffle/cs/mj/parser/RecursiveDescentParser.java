@@ -850,7 +850,6 @@ public final class RecursiveDescentParser {
                 scan();
                 break;
             case new_:
-                throw new Error("Unsuported yet");
 // scan();
 // check(ident);
 // if (sym == lbrack) {
@@ -858,6 +857,7 @@ public final class RecursiveDescentParser {
 // Expr();
 // check(rbrack);
 // }
+                throw new Error("New not supported yet");
 // break;
             case lpar:
                 scan();
@@ -879,9 +879,9 @@ public final class RecursiveDescentParser {
                 check(ident);
                 throw new Error("Fields ignored for now");
             } else {
-                // scan();
-                // Expr();
-                // check(rbrack);
+                scan();
+                Expr();
+                check(rbrack);
                 throw new Error("Arrays ignored for now...");
             }
         }

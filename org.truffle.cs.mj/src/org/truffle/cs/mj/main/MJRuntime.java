@@ -28,8 +28,25 @@ public class MJRuntime {
 // parseRD(ifProgram);
 // parseRD(divAlgorithm);
 // parseRD(absTets);
-        parseRD(staticTypingTets);
+        parseRD(factorial);
     }
+
+    static String factorial = ""//
+                    + "program Sample { "//
+                    + ""//
+                    + "     int func(int i){"//
+                    + "             if (i == 1){return 1;}"//
+                    + "             else "//
+                    + "             if (i == 2){"//
+                    + "                 return 1;} "//
+                    + "             else {"//
+                    + "                 return func(i-2) + func(i-1);"//
+                    + "             }"//
+                    + "         }"//
+                    + "     void main(int arg) int p[1]; {\n"//
+                    + "         print(func(6));"//
+                    + "     }\n"//
+                    + "}";
 
     static String staticTypingTets = ""//
                     + "program Sample { "//
@@ -55,23 +72,6 @@ public class MJRuntime {
                     + "         print(abs(-6));"//
                     + "         print(abs(6.1));"//
                     + "         print(abs(-6.1));"//
-                    + "     }\n"//
-                    + "}";
-
-    static String factorial = ""//
-                    + "program Sample { "//
-                    + ""//
-                    + "     int func(int i){"//
-                    + "             if (i == 1){return 1;}"//
-                    + "             else "//
-                    + "             if (i == 2){"//
-                    + "                 return 1;} "//
-                    + "             else {"//
-                    + "                 return func(i-2) + func(i-1);"//
-                    + "             }"//
-                    + "         }"//
-                    + "     void main(int i){\n"//
-                    + "         print(func(6));"//
                     + "     }\n"//
                     + "}";
 
