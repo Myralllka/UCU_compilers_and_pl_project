@@ -20,3 +20,6 @@ So far (during the course and after it) we implemented:
 - Designator
 - Addop
 - Mulop
+---
+### Details
+We have done almost everything except the classes and Arrays
