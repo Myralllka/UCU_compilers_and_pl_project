@@ -37,16 +37,14 @@ public class MJRuntime {
                     + "     print(b);\n"//
                     + "     print(i);\n"//
                     + "     print(f);\n"//
-                    + " }\n"//
+                    + "     }\n"//
                     + "     void main(int arg) int i; float f; boolean b; {\n"//
                     + "         i = 6;"//
                     + "         f = 7.0;"//
                     + "         b = true;"//
                     + "         pp(i, f, b);"//
-// + " i = 3.0;"//
-// + " f = 5;"//
-// + " b = 23;"//
-                    + " pp(i, f, b);"//
+                    + "         print(i);"//
+                    + "         pp(i, f, b);"//
                     + "     }\n"//
                     + "}";
 
