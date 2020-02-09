@@ -28,7 +28,7 @@ public class MJRuntime {
 // parseRD(divAlgorithm);
 // parseRD(absTets);
 // parseRD(staticTypingTets);
-// parseRD(finalTypesTets);
+        parseRD(finalTypesTets);
     }
 
     static String finalTypesTets = ""//
