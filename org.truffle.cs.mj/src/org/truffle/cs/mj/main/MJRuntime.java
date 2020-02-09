@@ -24,12 +24,35 @@ public class MJRuntime {
 // parseRD(test_f);
 // parseRD(factorial);
 // parseRD(ifProgram);
-// parseRD(test_f);
 // parseRD(ifProgram);
 // parseRD(divAlgorithm);
 // parseRD(absTets);
-        parseRD(staticTypingTets);
+// parseRD(staticTypingTets);
+// parseRD(finalTypesTets);
     }
+
+    static String finalTypesTets = ""//
+                    + "program Sample final int c_i = 11;  final float c_f = 11; final boolean c_b = 11;{ "//
+
+                    + "     void pp(int i, float f, boolean b) {\n"//
+                    + "         print(b);\n"//
+                    + "         print(i);\n"//
+                    + "         print(f);\n"//
+                    + "     }\n"//
+
+                    + "     void main(int arg) int i; float f; boolean b; {\n"//
+                    + "         i = 6;"//
+                    + "         f = 7.0;"//
+                    + "         b = true;"//
+// + " pp(i, f, b);"//
+                    + "         pp(c_i, c_f, c_b);"//
+                    + "         b = true;"//
+                    // + " i = 3.0;"//
+// + " f = 5;"//
+// + " b = 23;"//
+                    + " pp(i, f, b);"//
+                    + "     }\n"//
+                    + "}";
 
     static String staticTypingTets = ""//
                     + "program Sample { "//
@@ -89,7 +112,7 @@ public class MJRuntime {
                     + "     }\n"//
                     + "}";
 
-    static String test_f = ""//
+    static String recursionTest = ""//
                     + "program Sample { "//
                     + " void foo(int i) {\n" //
                     + "     print(i);\n" //
@@ -100,8 +123,6 @@ public class MJRuntime {
 
                     + " void main(int i) int p; {\n" //
                     + "     foo(i);\n" //
-// + " p = i + 1;\n"//
-// + " print(foo(p));\n"//
                     + " }\n"//
                     + "}";
 
@@ -219,8 +240,7 @@ public class MJRuntime {
         TruffleRuntime runtime = Truffle.getRuntime();
         System.out.println("Calling main function...");
         CallTarget callTarget = runtime.createCallTarget(parser.getMain());
-        for (int i = 0; i < 10; i++) {
-// System.out.println(callTarget.call(i));
+        for (int i = 0; i < 1; i++) {
             callTarget.call(i, i + 1000);
         }
     }
