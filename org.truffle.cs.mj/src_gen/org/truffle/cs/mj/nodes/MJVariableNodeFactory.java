@@ -38,7 +38,7 @@ public final class MJVariableNodeFactory {
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
             if ((state & 0b1) != 0 /* is-active readI(VirtualFrame) */) {
-                if ((frameValue.isLong(getSlot()))) {
+                if ((frameValue.isInt(getSlot()))) {
                     return readI(frameValue);
                 }
             }
@@ -96,7 +96,7 @@ public final class MJVariableNodeFactory {
                 return MJTypesGen.expectInteger(executeGeneric(frameValue));
             }
             if ((state & 0b1) != 0 /* is-active readI(VirtualFrame) */) {
-                if ((frameValue.isLong(getSlot()))) {
+                if ((frameValue.isInt(getSlot()))) {
                     return readI(frameValue);
                 }
             }
@@ -133,7 +133,7 @@ public final class MJVariableNodeFactory {
             int exclude = exclude_;
             try {
                 if (((exclude & 0b1)) == 0 /* is-not-excluded readI(VirtualFrame) */) {
-                    if ((frameValue.isLong(getSlot()))) {
+                    if ((frameValue.isInt(getSlot()))) {
                         this.state_ = state = state | 0b1 /* add-active readI(VirtualFrame) */;
                         lock.unlock();
                         hasLock = false;

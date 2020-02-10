@@ -16,18 +16,7 @@ public class MJVariableNode {
     public abstract static class MJReadLocalVariableNode extends MJExpresionNode {
         protected abstract FrameSlot getSlot();
 
-//
-// @Specialization
-// public Object readVariableNode(VirtualFrame frame) {
-// try {
-// return frame.getObject(getSlot());
-// } catch (FrameSlotTypeException e) {
-// CompilerDirectives.transferToInterpreter();
-// throw new Error(e);
-// }
-// }
-//
-        @Specialization(guards = "frame.isLong(getSlot())")
+        @Specialization(guards = "frame.isInt(getSlot())")
         protected int readI(VirtualFrame frame) {
             return FrameUtil.getIntSafe(frame, getSlot());
         }
@@ -59,8 +48,6 @@ public class MJVariableNode {
     @NodeField(name = "slot", type = FrameSlot.class)
     public abstract static class MJWriteLocalVariableNode extends MJStatementNode {
         protected abstract FrameSlot getSlot();
-
-// private boolean illegalAction = false;
 
         @Specialization(guards = "isIOrIllegal(frame)")
         protected int writeI(VirtualFrame frame, int value) {
@@ -118,9 +105,6 @@ public class MJVariableNode {
 
         @Specialization(replaces = {"writeI", "writeF", "writeB"})
         protected Object write(VirtualFrame frame, Object value) {
-// if (illegalAction) {
-// throw new Error("Type mismatch to " + frame.toString() + " try set " + value.toString());
-// }
             if (frame.getFrameDescriptor().getFrameSlotKind(getSlot()) == FrameSlotKind.Illegal) {
                 frame.getFrameDescriptor().setFrameSlotKind(getSlot(), FrameSlotKind.Object);
             }

@@ -24,11 +24,11 @@ public class MJRuntime {
 // parseRD(test_f);
 // parseRD(factorial);
 // parseRD(ifProgram);
-// parseRD(test_f);
 // parseRD(ifProgram);
 // parseRD(divAlgorithm);
 // parseRD(absTets);
-        parseRD(factorial);
+// parseRD(staticTypingTets);
+        parseRD(finalTypesTets);
     }
 
     static String factorial = ""//
@@ -49,6 +49,26 @@ public class MJRuntime {
                     + "         f = 345;"//
                     + "         s = p/f;"//
                     + "         print (s);"//
+    static String finalTypesTets = ""//
+                    + "program Sample final int c_i = 11;  final float c_f = 11; final boolean c_b = 11;{ "//
+
+                    + "     void pp(int i, float f, boolean b) {\n"//
+                    + "         print(b);\n"//
+                    + "         print(i);\n"//
+                    + "         print(f);\n"//
+                    + "     }\n"//
+
+                    + "     void main(int arg) int i; float f; boolean b; {\n"//
+                    + "         i = 6;"//
+                    + "         f = 7.0;"//
+                    + "         b = true;"//
+// + " pp(i, f, b);"//
+                    + "         pp(c_i, c_f, c_b);"//
+                    + "         b = true;"//
+                    // + " i = 3.0;"//
+// + " f = 5;"//
+// + " b = 23;"//
+                    + " pp(i, f, b);"//
                     + "     }\n"//
                     + "}";
 
@@ -58,14 +78,16 @@ public class MJRuntime {
                     + "     print(b);\n"//
                     + "     print(i);\n"//
                     + "     print(f);\n"//
-                    + "     }\n"//
+                    + " }\n"//
                     + "     void main(int arg) int i; float f; boolean b; {\n"//
                     + "         i = 6;"//
                     + "         f = 7.0;"//
                     + "         b = true;"//
                     + "         pp(i, f, b);"//
-                    + "         print(i);"//
-                    + "         pp(i, f, b);"//
+// + " i = 3.0;"//
+// + " f = 5;"//
+// + " b = 23;"//
+                    + " pp(i, f, b);"//
                     + "     }\n"//
                     + "}";
 
@@ -76,6 +98,23 @@ public class MJRuntime {
                     + "         print(abs(-6));"//
                     + "         print(abs(6.1));"//
                     + "         print(abs(-6.1));"//
+                    + "     }\n"//
+                    + "}";
+
+    static String factorial = ""//
+                    + "program Sample { "//
+                    + ""//
+                    + "     int func(int i){"//
+                    + "             if (i == 1){return 1;}"//
+                    + "             else "//
+                    + "             if (i == 2){"//
+                    + "                 return 1;} "//
+                    + "             else {"//
+                    + "                 return func(i-2) + func(i-1);"//
+                    + "             }"//
+                    + "         }"//
+                    + "     void main(int i){\n"//
+                    + "         print(func(6));"//
                     + "     }\n"//
                     + "}";
 
@@ -91,7 +130,7 @@ public class MJRuntime {
                     + "     }\n"//
                     + "}";
 
-    static String test_f = ""//
+    static String recursionTest = ""//
                     + "program Sample { "//
                     + " void foo(int i) {\n" //
                     + "     print(i);\n" //
@@ -102,8 +141,6 @@ public class MJRuntime {
 
                     + " void main(int i) int p; {\n" //
                     + "     foo(i);\n" //
-// + " p = i + 1;\n"//
-// + " print(foo(p));\n"//
                     + " }\n"//
                     + "}";
 
@@ -221,8 +258,7 @@ public class MJRuntime {
         TruffleRuntime runtime = Truffle.getRuntime();
         System.out.println("Calling main function...");
         CallTarget callTarget = runtime.createCallTarget(parser.getMain());
-        for (int i = 0; i < 10; i++) {
-// System.out.println(callTarget.call(i));
+        for (int i = 0; i < 1; i++) {
             callTarget.call(i, i + 1000);
         }
     }

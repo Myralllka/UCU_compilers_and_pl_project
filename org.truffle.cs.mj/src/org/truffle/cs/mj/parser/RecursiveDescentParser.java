@@ -40,6 +40,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,6 @@ import org.truffle.cs.mj.nodes.MJBreakNode;
 import org.truffle.cs.mj.nodes.MJContinueNode;
 import org.truffle.cs.mj.nodes.MJContstantBooleanNodeGen;
 import org.truffle.cs.mj.nodes.MJContstantFloatNodeGen;
-import org.truffle.cs.mj.nodes.MJContstantIntNode;
 import org.truffle.cs.mj.nodes.MJContstantIntNodeGen;
 import org.truffle.cs.mj.nodes.MJExpresionNode;
 import org.truffle.cs.mj.nodes.MJFunction;
@@ -62,6 +62,7 @@ import org.truffle.cs.mj.nodes.MJReturnNode;
 import org.truffle.cs.mj.nodes.MJStatementExpresion;
 import org.truffle.cs.mj.nodes.MJStatementNode;
 import org.truffle.cs.mj.nodes.MJUnaryNodeFactory;
+import org.truffle.cs.mj.nodes.MJVariableNode.MJReadLocalVariableNode;
 import org.truffle.cs.mj.nodes.MJVariableNodeFactory;
 import org.truffle.cs.mj.nodes.MJWhileLoop;
 import org.truffle.cs.mj.parser.Token.Kind;
@@ -281,18 +282,24 @@ public final class RecursiveDescentParser {
     private void Program() {
         check(program);
         check(ident);
+        currentFun = new MJFunction(PUBLIC_NAMESPACE, null, new FrameDescriptor());
+        slots.put(currentFun.getName(), new HashMap<>());
+        currentFrameDescriptor = currentFun.getFrameDescriptor();
+
         for (;;) {
             if (sym == final_) {
                 ConstDecl();
             } else if (sym == ident) {
                 VarDecl();
             } else if (sym == class_) {
-                ClassDecl();
+                throw new Error("Classes not supported yet!");
+// ClassDecl();
             } else {
                 break;
             }
         }
         check(lbrace);
+        currentFrameDescriptor = null;
         for (;;) {
             if (sym == rbrace || sym == eof) {
                 break;
@@ -303,21 +310,33 @@ public final class RecursiveDescentParser {
         check(rbrace);
     }
 
+    private HashMap<String, Integer> finalVars = new HashMap<>();
+
+    private final int VAR_NOT_INITIALISED = 2136812; // number that show only the
+                                                     // creation without initialization
+
+    private final int VAR_PSEUDO_INITIALISED = VAR_NOT_INITIALISED + 1; // pseudo init is introduced
+                                                                        // to assert type mismatch
+
+    private final int VAR_INITIALISED = VAR_PSEUDO_INITIALISED + 1; // number of changed values of a
+                                                                    // variables (due to code
+                                                                    // specification)
+
     /** ConstDecl = "final" Type ident "=" ( number | charConst ) ";" . */
     private void ConstDecl() {
-        throw new Error("Constants not implemented yet");
-// check(final_);
-// Type();
-// check(ident);
-// check(assign);
-// if (sym == number) {
-// scan();
-// } else if (sym == charConst) {
-// scan();
-// } else {
-// throw new Error("Constant declaration error");
-// }
-// check(semicolon);
+        check(final_);
+        String type = Type();
+        String name = Designator();
+        if (finalVars.get(name) != null) {
+            throw new Error("Constant " + name + " already exist!");
+        } else {
+            finalVars.put(name, VAR_NOT_INITIALISED);
+        }
+
+        check(assign);
+        createLocalVarWrite(name, getDefaultTypeInstance(type));
+        writeLocalVarWrite(name, Expr());
+        check(semicolon);
     }
 
     private static MJExpresionNode getDefaultTypeInstance(String type) {
@@ -361,23 +380,59 @@ public final class RecursiveDescentParser {
 
     FrameDescriptor currentFrameDescriptor;
 
-    public Map<String, FrameSlot> slots = new HashMap<>();
+    public Map<String, Map<String, FrameSlot>> slots = new HashMap<>();
+
+    private final String PUBLIC_NAMESPACE = "SUPER_UNREAL_PUBLICA_NAMESPACE";
+    private HashSet<String> publicVars = new HashSet<>();
 
     public MJStatementNode createLocalVarWrite(String name, MJExpresionNode value) {
-        FrameSlot frameSlot = slots.get(name);
+        if (currentFun.getName() == PUBLIC_NAMESPACE) {
+            publicVars.add(name);
+        }
+
+        FrameSlot frameSlot = slots.get(currentFun.getName()).get(name);
+
         if (frameSlot == null) {
             frameSlot = currentFrameDescriptor.addFrameSlot(name);
-            slots.put(name, frameSlot);
+            slots.get(currentFun.getName()).put(name, frameSlot);
+
+        } else {
+            throw new Error("Local variable " + name + " is already initialized!");
         }
         return MJVariableNodeFactory.MJWriteLocalVariableNodeGen.create(value, frameSlot);
     }
 
     public MJStatementNode writeLocalVarWrite(String name, MJExpresionNode value) {
-        FrameSlot frameSlot = slots.get(name);
+
+        FrameSlot frameSlot = slots.get(currentFun.getName()).get(name);
+
         if (frameSlot == null) {
-            throw new Error("Local variable " + name + "is not initialised!");
+            if (publicVars.contains(name)) {
+                frameSlot = slots.get(PUBLIC_NAMESPACE).get(name);
+            } else {
+                throw new Error("Variable " + name + " is not initialised!");
+            }
+
+        } else if (finalVars.containsKey(name) && slots.get(PUBLIC_NAMESPACE).get(name) != null) {
+            if (finalVars.get(name) == VAR_INITIALISED) {
+                throw new Error("Variable " + name + " is a final and can not be changed!");
+            } else {
+                finalVars.put(name, finalVars.get(name) + 1);
+            }
         }
         return MJVariableNodeFactory.MJWriteLocalVariableNodeGen.create(value, frameSlot);
+    }
+
+    public MJReadLocalVariableNode readLocalVarRead(String name) {
+        FrameSlot frameSlot = slots.get(currentFun.getName()).get(name);
+        if (frameSlot == null) {
+            if (publicVars.contains(name)) {
+                frameSlot = slots.get(PUBLIC_NAMESPACE).get(name);
+            } else {
+                throw new Error("No variable " + name + "found in this scope!");
+            }
+        }
+        return MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(frameSlot);
     }
 
     public List<MJFunction> functions = new ArrayList<>();
@@ -420,6 +475,11 @@ public final class RecursiveDescentParser {
         }
         check(ident);
         String name = t.str;
+
+        currentFun = new MJFunction(name, null, currentFrameDescriptor);
+        functions.add(currentFun);
+        slots.put(currentFun.getName(), new HashMap<>());
+
         check(lpar);
         if (sym == ident) {
             parameterNames = FormPars();
@@ -428,8 +488,6 @@ public final class RecursiveDescentParser {
         while (sym == ident) {
             VarDecl();
         }
-        currentFun = new MJFunction(name, null, currentFrameDescriptor);
-        functions.add(currentFun);
 
         MJStatementNode block = Block();
 
@@ -516,7 +574,7 @@ public final class RecursiveDescentParser {
                         if (!slots.containsKey(des)) {
                             throw new Error("Variable " + des + " does not exist");
                         }
-                        expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
+                        expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.AddNodeGen.create(expr, Expr()));
                         break;
                     case minusas:
@@ -524,7 +582,7 @@ public final class RecursiveDescentParser {
                         if (!slots.containsKey(des)) {
                             throw new Error("Variable " + des + " does not exist");
                         }
-                        expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
+                        expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.SubNodeGen.create(expr, Expr()));
                         break;
                     case timesas:
@@ -532,7 +590,7 @@ public final class RecursiveDescentParser {
                         if (!slots.containsKey(des)) {
                             throw new Error("Variable " + des + " does not exist");
                         }
-                        expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
+                        expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.MulNodeGen.create(expr, Expr()));
                         break;
                     case slashas:
@@ -540,7 +598,7 @@ public final class RecursiveDescentParser {
                         if (!slots.containsKey(des)) {
                             throw new Error("Variable " + des + " does not exist");
                         }
-                        expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
+                        expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.DivNodeGen.create(expr, Expr()));
                         break;
                     case remas:
@@ -548,7 +606,7 @@ public final class RecursiveDescentParser {
                         if (!slots.containsKey(des)) {
                             throw new Error("Variable " + des + " does not exist");
                         }
-                        expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
+                        expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.ModNodeGen.create(expr, Expr()));
                         break;
                     case lpar:
@@ -568,7 +626,7 @@ public final class RecursiveDescentParser {
                         if (!slots.containsKey(des)) {
                             throw new Error("Variable " + des + " does not exist");
                         }
-                        expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
+                        expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.AddNodeGen.create(expr, MJContstantIntNodeGen.create(1)));
                         break;
                     case mminus:
@@ -576,7 +634,7 @@ public final class RecursiveDescentParser {
                         if (!slots.containsKey(des)) {
                             throw new Error("Variable " + des + " does not exist");
                         }
-                        expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(des));
+                        expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.SubNodeGen.create(expr, MJContstantIntNodeGen.create(1)));
                         break;
                     default:
@@ -825,11 +883,7 @@ public final class RecursiveDescentParser {
                     if (index >= 0) {
                         expr = new MJReadParameterNode(index);
                     } else {
-                        FrameSlot localVar = slots.get(varname);
-                        if (localVar == null) {
-                            throw new Error("Variable " + varname + " not found!");
-                        }
-                        expr = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(localVar);
+                        expr = readLocalVarRead(varname);
                     }
 
                 }
@@ -847,8 +901,9 @@ public final class RecursiveDescentParser {
                 }
                 break;
             case charConst:
-                scan();
-                break;
+                throw new Error("Unsuported yet");
+// scan();
+// break;
             case new_:
 // scan();
 // check(ident);
