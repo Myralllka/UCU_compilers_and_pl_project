@@ -390,7 +390,7 @@ public final class RecursiveDescendScanner {
             if (ch == '\'') {
                 nextCh();
             } else {
-                throw new Error("missing quote");
+                throw new Error("missing quote: " + (char) t.val + " found");
             }
         }
     }

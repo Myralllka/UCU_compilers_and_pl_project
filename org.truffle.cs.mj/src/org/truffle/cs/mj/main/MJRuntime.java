@@ -28,8 +28,20 @@ public class MJRuntime {
 // parseRD(divAlgorithm);
 // parseRD(absTets);
 // parseRD(staticTypingTets);
-        parseRD(finalTypesTets);
+// parseRD(finalTypesTets);
+        parseRD(charTest);
     }
+
+    static String charTest = ""//
+                    + "program Sample final int c_i = 11; { "//
+
+                    + "     void main(int arg) char c; int i; {\n"//
+// + " i = 41;"//
+// + " i += c_i;"//
+// + " print(i);"//
+                    + " print(c_i);"//
+                    + "     }\n"//
+                    + "}";
 
     static String finalTypesTets = ""//
                     + "program Sample final int c_i = 11;  final float c_f = 11; final boolean c_b = 11;{ "//

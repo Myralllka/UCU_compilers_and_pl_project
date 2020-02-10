@@ -50,6 +50,7 @@ import org.truffle.cs.mj.nodes.MJBlock;
 import org.truffle.cs.mj.nodes.MJBreakNode;
 import org.truffle.cs.mj.nodes.MJContinueNode;
 import org.truffle.cs.mj.nodes.MJContstantBooleanNodeGen;
+import org.truffle.cs.mj.nodes.MJContstantCharNodeGen;
 import org.truffle.cs.mj.nodes.MJContstantFloatNodeGen;
 import org.truffle.cs.mj.nodes.MJContstantIntNodeGen;
 import org.truffle.cs.mj.nodes.MJExpresionNode;
@@ -71,6 +72,7 @@ import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
+import com.oracle.truffle.api.frame.FrameSlotKind;
 
 public final class RecursiveDescentParser {
     /** Maximum number of global variables per program */
@@ -315,12 +317,9 @@ public final class RecursiveDescentParser {
     private final int VAR_NOT_INITIALISED = 2136812; // number that show only the
                                                      // creation without initialization
 
-    private final int VAR_PSEUDO_INITIALISED = VAR_NOT_INITIALISED + 1; // pseudo init is introduced
-                                                                        // to assert type mismatch
-
-    private final int VAR_INITIALISED = VAR_PSEUDO_INITIALISED + 1; // number of changed values of a
-                                                                    // variables (due to code
-                                                                    // specification)
+    private final int VAR_INITIALISED = VAR_NOT_INITIALISED + 456; // number of changed values of a
+                                                                   // variables (due to code
+                                                                   // specification)
 
     /** ConstDecl = "final" Type ident "=" ( number | charConst ) ";" . */
     private void ConstDecl() {
@@ -339,17 +338,31 @@ public final class RecursiveDescentParser {
         check(semicolon);
     }
 
-    private static MJExpresionNode getDefaultTypeInstance(String type) {
+    private static FrameSlotKind getDefaultTypeInstance(String type) {
         switch (type) {
             case "int":
-                return MJContstantIntNodeGen.create(0);
+                return FrameSlotKind.Int;
             case "float":
-                return MJContstantFloatNodeGen.create(0);
+                return FrameSlotKind.Float;
             case "boolean":
-                return MJContstantBooleanNodeGen.create(false);
+                return FrameSlotKind.Boolean;
+            case "char":
+                return FrameSlotKind.Byte;
             default:
                 throw new Error(type + " this type is not suported yet!");
         }
+// switch (type) {
+// case "int":
+// return MJContstantIntNodeGen.create(0);
+// case "float":
+// return MJContstantFloatNodeGen.create(0);
+// case "boolean":
+// return MJContstantBooleanNodeGen.create(false);
+// case "char":
+// return MJContstantCharNodeGen.create('\0');
+// default:
+// throw new Error(type + " this type is not suported yet!");
+// }
     }
 
     /** VarDecl = Type ident { "," ident } ";" . */
@@ -385,7 +398,7 @@ public final class RecursiveDescentParser {
     private final String PUBLIC_NAMESPACE = "SUPER_UNREAL_PUBLICA_NAMESPACE";
     private HashSet<String> publicVars = new HashSet<>();
 
-    public MJStatementNode createLocalVarWrite(String name, MJExpresionNode value) {
+    public void createLocalVarWrite(String name, FrameSlotKind type) {
         if (currentFun.getName() == PUBLIC_NAMESPACE) {
             publicVars.add(name);
         }
@@ -399,7 +412,9 @@ public final class RecursiveDescentParser {
         } else {
             throw new Error("Local variable " + name + " is already initialized!");
         }
-        return MJVariableNodeFactory.MJWriteLocalVariableNodeGen.create(value, frameSlot);
+        currentFrameDescriptor.setFrameSlotKind(frameSlot, type);
+
+// return MJVariableNodeFactory.MJWriteLocalVariableNodeGen.create(value, frameSlot);
     }
 
     public MJStatementNode writeLocalVarWrite(String name, MJExpresionNode value) {
@@ -413,11 +428,11 @@ public final class RecursiveDescentParser {
                 throw new Error("Variable " + name + " is not initialised!");
             }
 
-        } else if (finalVars.containsKey(name) && slots.get(PUBLIC_NAMESPACE).get(name) != null) {
+        } else if (finalVars.containsKey(name)) {
             if (finalVars.get(name) == VAR_INITIALISED) {
                 throw new Error("Variable " + name + " is a final and can not be changed!");
             } else {
-                finalVars.put(name, finalVars.get(name) + 1);
+                finalVars.put(name, VAR_INITIALISED);
             }
         }
         return MJVariableNodeFactory.MJWriteLocalVariableNodeGen.create(value, frameSlot);
@@ -429,7 +444,7 @@ public final class RecursiveDescentParser {
             if (publicVars.contains(name)) {
                 frameSlot = slots.get(PUBLIC_NAMESPACE).get(name);
             } else {
-                throw new Error("No variable " + name + "found in this scope!");
+                throw new Error("No variable " + name + "found in this scope!4");
             }
         }
         return MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(frameSlot);
@@ -515,9 +530,9 @@ public final class RecursiveDescentParser {
         String type = la.str;
         check(ident);
         if (sym == lbrack) {
-            scan();
-
-            check(rbrack);
+            throw new Error("Arrays are ignored for now");
+// scan();
+// check(rbrack);
         }
         return type;
     }
@@ -571,41 +586,26 @@ public final class RecursiveDescentParser {
                         break;
                     case plusas:
                         Assignop();
-                        if (!slots.containsKey(des)) {
-                            throw new Error("Variable " + des + " does not exist");
-                        }
                         expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.AddNodeGen.create(expr, Expr()));
                         break;
                     case minusas:
                         Assignop();
-                        if (!slots.containsKey(des)) {
-                            throw new Error("Variable " + des + " does not exist");
-                        }
                         expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.SubNodeGen.create(expr, Expr()));
                         break;
                     case timesas:
                         Assignop();
-                        if (!slots.containsKey(des)) {
-                            throw new Error("Variable " + des + " does not exist");
-                        }
                         expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.MulNodeGen.create(expr, Expr()));
                         break;
                     case slashas:
                         Assignop();
-                        if (!slots.containsKey(des)) {
-                            throw new Error("Variable " + des + " does not exist");
-                        }
                         expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.DivNodeGen.create(expr, Expr()));
                         break;
                     case remas:
                         Assignop();
-                        if (!slots.containsKey(des)) {
-                            throw new Error("Variable " + des + " does not exist");
-                        }
                         expr = readLocalVarRead(des);
                         currentParsStatement = writeLocalVarWrite(des, MJBinaryNodeFactory.ModNodeGen.create(expr, Expr()));
                         break;
@@ -901,9 +901,11 @@ public final class RecursiveDescentParser {
                 }
                 break;
             case charConst:
-                throw new Error("Unsuported yet");
-// scan();
-// break;
+                scan();
+                char ch = (char) t.val;
+
+                expr = MJContstantCharNodeGen.create(ch);
+                break;
             case new_:
 // scan();
 // check(ident);

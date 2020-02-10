@@ -2,7 +2,6 @@ package org.truffle.cs.mj.nodes;
 
 import com.oracle.truffle.api.dsl.Specialization;
 
-//public abstract class MJContstantFloatNode extends MJExpresionNode implements TypeFactory {
 public abstract class MJContstantFloatNode extends MJExpresionNode {
 
     private final float constant;

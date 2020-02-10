@@ -4,7 +4,7 @@ import com.oracle.truffle.api.dsl.TypeSystem;
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.ImplicitCast;
 
-@TypeSystem({boolean.class, int.class, double.class})
+@TypeSystem({boolean.class, int.class, double.class, char.class})
 public abstract class MJTypes {
     @ImplicitCast
     @TruffleBoundary

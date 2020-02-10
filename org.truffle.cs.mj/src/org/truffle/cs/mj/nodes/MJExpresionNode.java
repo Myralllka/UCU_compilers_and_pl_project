@@ -28,4 +28,8 @@ public abstract class MJExpresionNode extends Node {
     public boolean executeBool(VirtualFrame frame) throws UnexpectedResultException {
         return MJTypesGen.expectBoolean(executeGeneric(frame));
     }
+
+    public char executeChar(VirtualFrame frame) throws UnexpectedResultException {
+        return MJTypesGen.expectCharacter(executeGeneric(frame));
+    }
 }

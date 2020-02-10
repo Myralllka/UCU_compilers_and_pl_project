@@ -62,6 +62,22 @@ public final class MJTypesGen extends MJTypes {
         throw new UnexpectedResultException(value);
     }
 
+    public static boolean isCharacter(Object value) {
+        return value instanceof Character;
+    }
+
+    public static char asCharacter(Object value) {
+        assert value instanceof Character : "MJTypesGen.asCharacter: char expected";
+        return (char) value;
+    }
+
+    public static char expectCharacter(Object value) throws UnexpectedResultException {
+        if (value instanceof Character) {
+            return (char) value;
+        }
+        throw new UnexpectedResultException(value);
+    }
+
     public static double expectImplicitDouble(int state, Object value) throws UnexpectedResultException {
         if ((state & 0b1) != 0 && value instanceof Integer) {
             return castDouble((int) value);

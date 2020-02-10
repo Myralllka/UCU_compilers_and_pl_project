@@ -23,12 +23,16 @@ public final class MJPrintNodeGen extends MJPrintNode {
     @Override
     public Object execute(VirtualFrame frameValue) {
         int state = state_;
-        if ((state & 0b110) == 0 /* only-active printI(int) */ && state != 0  /* is-not printI(int) && printF(float) && printO(Object) */) {
+        if ((state & 0b11110) == 0 /* only-active printI(int) */ && state != 0  /* is-not printI(int) && printF(float) && printC(char) && printB(boolean) && printO(Object) */) {
             return execute_int0(frameValue, state);
-        } else if ((state & 0b101) == 0 /* only-active printF(float) */ && state != 0  /* is-not printI(int) && printF(float) && printO(Object) */) {
+        } else if ((state & 0b11101) == 0 /* only-active printF(float) */ && state != 0  /* is-not printI(int) && printF(float) && printC(char) && printB(boolean) && printO(Object) */) {
             return execute_float1(frameValue, state);
+        } else if ((state & 0b11011) == 0 /* only-active printC(char) */ && state != 0  /* is-not printI(int) && printF(float) && printC(char) && printB(boolean) && printO(Object) */) {
+            return execute_char2(frameValue, state);
+        } else if ((state & 0b10111) == 0 /* only-active printB(boolean) */ && state != 0  /* is-not printI(int) && printF(float) && printC(char) && printB(boolean) && printO(Object) */) {
+            return execute_boolean3(frameValue, state);
         } else {
-            return execute_generic2(frameValue, state);
+            return execute_generic4(frameValue, state);
         }
     }
 
@@ -54,7 +58,29 @@ public final class MJPrintNodeGen extends MJPrintNode {
         return printF(expressionValue_);
     }
 
-    private Object execute_generic2(VirtualFrame frameValue, int state) {
+    private Object execute_char2(VirtualFrame frameValue, int state) {
+        char expressionValue_;
+        try {
+            expressionValue_ = this.expression_.executeChar(frameValue);
+        } catch (UnexpectedResultException ex) {
+            return executeAndSpecialize(ex.getResult());
+        }
+        assert (state & 0b100) != 0 /* is-active printC(char) */;
+        return printC(expressionValue_);
+    }
+
+    private Object execute_boolean3(VirtualFrame frameValue, int state) {
+        boolean expressionValue_;
+        try {
+            expressionValue_ = this.expression_.executeBool(frameValue);
+        } catch (UnexpectedResultException ex) {
+            return executeAndSpecialize(ex.getResult());
+        }
+        assert (state & 0b1000) != 0 /* is-active printB(boolean) */;
+        return printB(expressionValue_);
+    }
+
+    private Object execute_generic4(VirtualFrame frameValue, int state) {
         Object expressionValue_ = this.expression_.executeGeneric(frameValue);
         if ((state & 0b1) != 0 /* is-active printI(int) */ && expressionValue_ instanceof Integer) {
             int expressionValue__ = (int) expressionValue_;
@@ -64,7 +90,15 @@ public final class MJPrintNodeGen extends MJPrintNode {
             float expressionValue__ = (float) expressionValue_;
             return printF(expressionValue__);
         }
-        if ((state & 0b100) != 0 /* is-active printO(Object) */) {
+        if ((state & 0b100) != 0 /* is-active printC(char) */ && expressionValue_ instanceof Character) {
+            char expressionValue__ = (char) expressionValue_;
+            return printC(expressionValue__);
+        }
+        if ((state & 0b1000) != 0 /* is-active printB(boolean) */ && expressionValue_ instanceof Boolean) {
+            boolean expressionValue__ = (boolean) expressionValue_;
+            return printB(expressionValue__);
+        }
+        if ((state & 0b10000) != 0 /* is-active printO(Object) */) {
             return printO(expressionValue_);
         }
         CompilerDirectives.transferToInterpreterAndInvalidate();
@@ -83,7 +117,17 @@ public final class MJPrintNodeGen extends MJPrintNode {
             this.state_ = state = state | 0b10 /* add-active printF(float) */;
             return printF(expressionValue_);
         }
-        this.state_ = state = state | 0b100 /* add-active printO(Object) */;
+        if (expressionValue instanceof Character) {
+            char expressionValue_ = (char) expressionValue;
+            this.state_ = state = state | 0b100 /* add-active printC(char) */;
+            return printC(expressionValue_);
+        }
+        if (expressionValue instanceof Boolean) {
+            boolean expressionValue_ = (boolean) expressionValue;
+            this.state_ = state = state | 0b1000 /* add-active printB(boolean) */;
+            return printB(expressionValue_);
+        }
+        this.state_ = state = state | 0b10000 /* add-active printO(Object) */;
         return printO(expressionValue);
     }
 

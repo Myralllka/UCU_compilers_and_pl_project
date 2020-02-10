@@ -52,7 +52,12 @@ public final class MJVariableNodeFactory {
                     return readB(frameValue);
                 }
             }
-            if ((state & 0b1000) != 0 /* is-active readVariableNode(VirtualFrame) */) {
+            if ((state & 0b1000) != 0 /* is-active readC(VirtualFrame) */) {
+                if ((frameValue.isByte(getSlot()))) {
+                    return readC(frameValue);
+                }
+            }
+            if ((state & 0b10000) != 0 /* is-active readVariableNode(VirtualFrame) */) {
                 return readVariableNode(frameValue);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
@@ -62,7 +67,7 @@ public final class MJVariableNodeFactory {
         @Override
         public boolean executeBool(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            if ((state & 0b1000) != 0 /* is-active readVariableNode(VirtualFrame) */) {
+            if ((state & 0b10000) != 0 /* is-active readVariableNode(VirtualFrame) */) {
                 return MJTypesGen.expectBoolean(executeGeneric(frameValue));
             }
             if ((state & 0b100) != 0 /* is-active readB(VirtualFrame) */) {
@@ -75,9 +80,24 @@ public final class MJVariableNodeFactory {
         }
 
         @Override
+        public char executeChar(VirtualFrame frameValue) throws UnexpectedResultException {
+            int state = state_;
+            if ((state & 0b10000) != 0 /* is-active readVariableNode(VirtualFrame) */) {
+                return MJTypesGen.expectCharacter(executeGeneric(frameValue));
+            }
+            if ((state & 0b1000) != 0 /* is-active readC(VirtualFrame) */) {
+                if ((frameValue.isByte(getSlot()))) {
+                    return readC(frameValue);
+                }
+            }
+            CompilerDirectives.transferToInterpreterAndInvalidate();
+            return MJTypesGen.expectCharacter(executeAndSpecialize(frameValue));
+        }
+
+        @Override
         public float executeF32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            if ((state & 0b1000) != 0 /* is-active readVariableNode(VirtualFrame) */) {
+            if ((state & 0b10000) != 0 /* is-active readVariableNode(VirtualFrame) */) {
                 return expectFloat(executeGeneric(frameValue));
             }
             if ((state & 0b10) != 0 /* is-active readF(VirtualFrame) */) {
@@ -92,7 +112,7 @@ public final class MJVariableNodeFactory {
         @Override
         public int executeI32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
-            if ((state & 0b1000) != 0 /* is-active readVariableNode(VirtualFrame) */) {
+            if ((state & 0b10000) != 0 /* is-active readVariableNode(VirtualFrame) */) {
                 return MJTypesGen.expectInteger(executeGeneric(frameValue));
             }
             if ((state & 0b1) != 0 /* is-active readI(VirtualFrame) */) {
@@ -108,13 +128,16 @@ public final class MJVariableNodeFactory {
         public void executeVoid(VirtualFrame frameValue) {
             int state = state_;
             try {
-                if ((state & 0b1110) == 0 /* only-active readI(VirtualFrame) */ && state != 0  /* is-not readI(VirtualFrame) && readF(VirtualFrame) && readB(VirtualFrame) && readVariableNode(VirtualFrame) */) {
+                if ((state & 0b11110) == 0 /* only-active readI(VirtualFrame) */ && state != 0  /* is-not readI(VirtualFrame) && readF(VirtualFrame) && readB(VirtualFrame) && readC(VirtualFrame) && readVariableNode(VirtualFrame) */) {
                     executeI32(frameValue);
                     return;
-                } else if ((state & 0b1101) == 0 /* only-active readF(VirtualFrame) */ && state != 0  /* is-not readI(VirtualFrame) && readF(VirtualFrame) && readB(VirtualFrame) && readVariableNode(VirtualFrame) */) {
+                } else if ((state & 0b11101) == 0 /* only-active readF(VirtualFrame) */ && state != 0  /* is-not readI(VirtualFrame) && readF(VirtualFrame) && readB(VirtualFrame) && readC(VirtualFrame) && readVariableNode(VirtualFrame) */) {
                     executeF32(frameValue);
                     return;
-                } else if ((state & 0b1011) == 0 /* only-active readB(VirtualFrame) */ && state != 0  /* is-not readI(VirtualFrame) && readF(VirtualFrame) && readB(VirtualFrame) && readVariableNode(VirtualFrame) */) {
+                } else if ((state & 0b10111) == 0 /* only-active readC(VirtualFrame) */ && state != 0  /* is-not readI(VirtualFrame) && readF(VirtualFrame) && readB(VirtualFrame) && readC(VirtualFrame) && readVariableNode(VirtualFrame) */) {
+                    executeChar(frameValue);
+                    return;
+                } else if ((state & 0b11011) == 0 /* only-active readB(VirtualFrame) */ && state != 0  /* is-not readI(VirtualFrame) && readF(VirtualFrame) && readB(VirtualFrame) && readC(VirtualFrame) && readVariableNode(VirtualFrame) */) {
                     executeBool(frameValue);
                     return;
                 }
@@ -156,9 +179,17 @@ public final class MJVariableNodeFactory {
                         return readB(frameValue);
                     }
                 }
-                this.exclude_ = exclude = exclude | 0b111 /* add-excluded readI(VirtualFrame), readF(VirtualFrame), readB(VirtualFrame) */;
-                state = state & 0xfffffff8 /* remove-active readI(VirtualFrame), readF(VirtualFrame), readB(VirtualFrame) */;
-                this.state_ = state = state | 0b1000 /* add-active readVariableNode(VirtualFrame) */;
+                if (((exclude & 0b1000)) == 0 /* is-not-excluded readC(VirtualFrame) */) {
+                    if ((frameValue.isByte(getSlot()))) {
+                        this.state_ = state = state | 0b1000 /* add-active readC(VirtualFrame) */;
+                        lock.unlock();
+                        hasLock = false;
+                        return readC(frameValue);
+                    }
+                }
+                this.exclude_ = exclude = exclude | 0b1111 /* add-excluded readI(VirtualFrame), readF(VirtualFrame), readB(VirtualFrame), readC(VirtualFrame) */;
+                state = state & 0xfffffff0 /* remove-active readI(VirtualFrame), readF(VirtualFrame), readB(VirtualFrame), readC(VirtualFrame) */;
+                this.state_ = state = state | 0b10000 /* add-active readVariableNode(VirtualFrame) */;
                 lock.unlock();
                 hasLock = false;
                 return readVariableNode(frameValue);
@@ -213,14 +244,16 @@ public final class MJVariableNodeFactory {
         @Override
         public Object execute(VirtualFrame frameValue) {
             int state = state_;
-            if ((state & 0b1110) == 0 /* only-active writeI(VirtualFrame, int) */ && state != 0  /* is-not writeI(VirtualFrame, int) && writeF(VirtualFrame, float) && writeB(VirtualFrame, boolean) && write(VirtualFrame, Object) */) {
+            if ((state & 0b11110) == 0 /* only-active writeI(VirtualFrame, int) */ && state != 0  /* is-not writeI(VirtualFrame, int) && writeF(VirtualFrame, float) && writeB(VirtualFrame, boolean) && writeC(VirtualFrame, char) && write(VirtualFrame, Object) */) {
                 return execute_int0(frameValue, state);
-            } else if ((state & 0b1101) == 0 /* only-active writeF(VirtualFrame, float) */ && state != 0  /* is-not writeI(VirtualFrame, int) && writeF(VirtualFrame, float) && writeB(VirtualFrame, boolean) && write(VirtualFrame, Object) */) {
+            } else if ((state & 0b11101) == 0 /* only-active writeF(VirtualFrame, float) */ && state != 0  /* is-not writeI(VirtualFrame, int) && writeF(VirtualFrame, float) && writeB(VirtualFrame, boolean) && writeC(VirtualFrame, char) && write(VirtualFrame, Object) */) {
                 return execute_float1(frameValue, state);
-            } else if ((state & 0b1011) == 0 /* only-active writeB(VirtualFrame, boolean) */ && state != 0  /* is-not writeI(VirtualFrame, int) && writeF(VirtualFrame, float) && writeB(VirtualFrame, boolean) && write(VirtualFrame, Object) */) {
+            } else if ((state & 0b11011) == 0 /* only-active writeB(VirtualFrame, boolean) */ && state != 0  /* is-not writeI(VirtualFrame, int) && writeF(VirtualFrame, float) && writeB(VirtualFrame, boolean) && writeC(VirtualFrame, char) && write(VirtualFrame, Object) */) {
                 return execute_boolean2(frameValue, state);
+            } else if ((state & 0b10111) == 0 /* only-active writeC(VirtualFrame, char) */ && state != 0  /* is-not writeI(VirtualFrame, int) && writeF(VirtualFrame, float) && writeB(VirtualFrame, boolean) && writeC(VirtualFrame, char) && write(VirtualFrame, Object) */) {
+                return execute_char3(frameValue, state);
             } else {
-                return execute_generic3(frameValue, state);
+                return execute_generic4(frameValue, state);
             }
         }
 
@@ -269,7 +302,22 @@ public final class MJVariableNodeFactory {
             return executeAndSpecialize(frameValue, valueValue_);
         }
 
-        private Object execute_generic3(VirtualFrame frameValue, int state) {
+        private Object execute_char3(VirtualFrame frameValue, int state) {
+            char valueValue_;
+            try {
+                valueValue_ = this.value_.executeChar(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(frameValue, ex.getResult());
+            }
+            assert (state & 0b1000) != 0 /* is-active writeC(VirtualFrame, char) */;
+            if ((isCOrIllegal(frameValue))) {
+                return writeC(frameValue, valueValue_);
+            }
+            CompilerDirectives.transferToInterpreterAndInvalidate();
+            return executeAndSpecialize(frameValue, valueValue_);
+        }
+
+        private Object execute_generic4(VirtualFrame frameValue, int state) {
             Object valueValue_ = this.value_.executeGeneric(frameValue);
             if ((state & 0b1) != 0 /* is-active writeI(VirtualFrame, int) */ && valueValue_ instanceof Integer) {
                 int valueValue__ = (int) valueValue_;
@@ -289,7 +337,13 @@ public final class MJVariableNodeFactory {
                     return writeB(frameValue, valueValue__);
                 }
             }
-            if ((state & 0b1000) != 0 /* is-active write(VirtualFrame, Object) */) {
+            if ((state & 0b1000) != 0 /* is-active writeC(VirtualFrame, char) */ && valueValue_ instanceof Character) {
+                char valueValue__ = (char) valueValue_;
+                if ((isCOrIllegal(frameValue))) {
+                    return writeC(frameValue, valueValue__);
+                }
+            }
+            if ((state & 0b10000) != 0 /* is-active write(VirtualFrame, Object) */) {
                 return write(frameValue, valueValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
@@ -330,9 +384,18 @@ public final class MJVariableNodeFactory {
                         return writeB(frameValue, valueValue_);
                     }
                 }
-                this.exclude_ = exclude = exclude | 0b111 /* add-excluded writeI(VirtualFrame, int), writeF(VirtualFrame, float), writeB(VirtualFrame, boolean) */;
-                state = state & 0xfffffff8 /* remove-active writeI(VirtualFrame, int), writeF(VirtualFrame, float), writeB(VirtualFrame, boolean) */;
-                this.state_ = state = state | 0b1000 /* add-active write(VirtualFrame, Object) */;
+                if (((exclude & 0b1000)) == 0 /* is-not-excluded writeC(VirtualFrame, char) */ && valueValue instanceof Character) {
+                    char valueValue_ = (char) valueValue;
+                    if ((isCOrIllegal(frameValue))) {
+                        this.state_ = state = state | 0b1000 /* add-active writeC(VirtualFrame, char) */;
+                        lock.unlock();
+                        hasLock = false;
+                        return writeC(frameValue, valueValue_);
+                    }
+                }
+                this.exclude_ = exclude = exclude | 0b1111 /* add-excluded writeI(VirtualFrame, int), writeF(VirtualFrame, float), writeB(VirtualFrame, boolean), writeC(VirtualFrame, char) */;
+                state = state & 0xfffffff0 /* remove-active writeI(VirtualFrame, int), writeF(VirtualFrame, float), writeB(VirtualFrame, boolean), writeC(VirtualFrame, char) */;
+                this.state_ = state = state | 0b10000 /* add-active write(VirtualFrame, Object) */;
                 lock.unlock();
                 hasLock = false;
                 return write(frameValue, valueValue);

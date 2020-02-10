@@ -31,7 +31,13 @@ public class MJVariableNode {
             return FrameUtil.getBooleanSafe(frame, getSlot());
         }
 
-        @Specialization(replaces = {"readI", "readB", "readF"})
+        @Specialization(guards = "frame.isByte(getSlot())")
+        protected char readC(VirtualFrame frame) {
+            return (char) FrameUtil.getByteSafe(frame, getSlot());
+
+        }
+
+        @Specialization(replaces = {"readI", "readB", "readF", "readC"})
         protected Object readVariableNode(VirtualFrame frame) {
             if (!frame.isObject(getSlot())) {
                 CompilerDirectives.transferToInterpreter();
@@ -51,7 +57,7 @@ public class MJVariableNode {
 
         @Specialization(guards = "isIOrIllegal(frame)")
         protected int writeI(VirtualFrame frame, int value) {
-            frame.getFrameDescriptor().setFrameSlotKind(getSlot(), FrameSlotKind.Int);
+// frame.getFrameDescriptor().setFrameSlotKind(getSlot(), FrameSlotKind.Int);
 
             frame.setInt(getSlot(), value);
             return value;
@@ -59,7 +65,7 @@ public class MJVariableNode {
 
         @Specialization(guards = "isFOrIllegal(frame)")
         protected float writeF(VirtualFrame frame, float value) {
-            frame.getFrameDescriptor().setFrameSlotKind(getSlot(), FrameSlotKind.Float);
+// frame.getFrameDescriptor().setFrameSlotKind(getSlot(), FrameSlotKind.Float);
 
             frame.setFloat(getSlot(), value);
             return value;
@@ -67,9 +73,17 @@ public class MJVariableNode {
 
         @Specialization(guards = "isBOrIllegal(frame)")
         protected boolean writeB(VirtualFrame frame, boolean value) {
-            frame.getFrameDescriptor().setFrameSlotKind(getSlot(), FrameSlotKind.Boolean);
+// frame.getFrameDescriptor().setFrameSlotKind(getSlot(), FrameSlotKind.Boolean);
 
             frame.setBoolean(getSlot(), value);
+            return value;
+        }
+
+        @Specialization(guards = "isCOrIllegal(frame)")
+        protected char writeC(VirtualFrame frame, char value) {
+// frame.getFrameDescriptor().setFrameSlotKind(getSlot(), FrameSlotKind.Byte);
+
+            frame.setByte(getSlot(), (byte) value);
             return value;
         }
 
@@ -77,33 +91,43 @@ public class MJVariableNode {
         protected boolean isIOrIllegal(VirtualFrame frame) {
             final FrameSlotKind kind = frame.getFrameDescriptor().getFrameSlotKind(getSlot());
 
-            if (kind == FrameSlotKind.Int || kind == FrameSlotKind.Illegal) {
+            if (kind == FrameSlotKind.Int) {
                 return true;
             } else {
-                throw new Error("Type mismatch " + kind.toString() + " try set " + "Int");
+                throw new Error("Type mismatch Int var try set to " + kind.toString());
             }
         }
 
         protected boolean isFOrIllegal(VirtualFrame frame) {
             final FrameSlotKind kind = frame.getFrameDescriptor().getFrameSlotKind(getSlot());
-            if (kind == FrameSlotKind.Float || kind == FrameSlotKind.Illegal) {
+            if (kind == FrameSlotKind.Float) {
                 return true;
             } else {
-                throw new Error("Type mismatch " + kind.toString() + " try set " + "Float");
+                throw new Error("Type mismatch Float var try set to " + kind.toString());
             }
         }
 
         protected boolean isBOrIllegal(VirtualFrame frame) {
             final FrameSlotKind kind = frame.getFrameDescriptor().getFrameSlotKind(getSlot());
 
-            if (kind == FrameSlotKind.Boolean || kind == FrameSlotKind.Illegal) {
+            if (kind == FrameSlotKind.Boolean) {
                 return true;
             } else {
-                throw new Error("Type mismatch " + kind.toString() + " try set " + "Boolean");
+                throw new Error("Type mismatch Boolean var try set to " + kind.toString());
             }
         }
 
-        @Specialization(replaces = {"writeI", "writeF", "writeB"})
+        protected boolean isCOrIllegal(VirtualFrame frame) {
+            final FrameSlotKind kind = frame.getFrameDescriptor().getFrameSlotKind(getSlot());
+
+            if (kind == FrameSlotKind.Byte) {
+                return true;
+            } else {
+                throw new Error("Type mismatch Char var try set to " + kind.toString());
+            }
+        }
+
+        @Specialization(replaces = {"writeI", "writeF", "writeB", "writeC"})
         protected Object write(VirtualFrame frame, Object value) {
             if (frame.getFrameDescriptor().getFrameSlotKind(getSlot()) == FrameSlotKind.Illegal) {
                 frame.getFrameDescriptor().setFrameSlotKind(getSlot(), FrameSlotKind.Object);
