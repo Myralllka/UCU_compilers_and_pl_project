@@ -1,0 +1,10 @@
+/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/Abs.java
+/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/Add.java
+/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/Arg.java
+/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/AssumptionArg.java
+/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/Expression.java
+/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/ExpressionFunction.java
+/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/LiveCoding.java
+/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/PlainAST/PlainAST.java
+/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/RunningExamples.java
+/home/myralllka/Documents/Compilers/lviv_01_2020_GraalVMCourse/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/SimplestPEA.java

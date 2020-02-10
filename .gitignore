@@ -1,4 +1,4 @@
 ./org.truffle.cs.mj/bin/
-.idea
-
+.idea/
+./org.truffle.cs.mj/javafilelist.txt
 

@@ -43,8 +43,12 @@ public class MJRuntime {
                     + "                 return func(i-2) + func(i-1);"//
                     + "             }"//
                     + "         }"//
-                    + "     void main(int arg) int p[1]; {\n"//
-                    + "         print(func(6));"//
+                    + "     void main(int arg) int k, l; float p, f, s;{\n"//
+// + " print(func(6));"//
+                    + "         p = 34;"//
+                    + "         f = 345;"//
+                    + "         s = p/f;"//
+                    + "         print (s);"//
                     + "     }\n"//
                     + "}";
 
