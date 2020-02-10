@@ -43,6 +43,24 @@ public class MJRuntime {
                     + "     }\n"//
                     + "}";
 
+    static String factorial = ""//
+                    + "program Sample { "//
+                    + ""//
+                    + "     int func(int i){"//
+                    + "             if (i == 1){return 1;}"//
+                    + "             else "//
+                    + "             if (i == 2){"//
+                    + "                 return 1;} "//
+                    + "             else {"//
+                    + "                 return func(i-2) + func(i-1);"//
+                    + "             }"//
+                    + "         }"//
+                    + "     void main(int arg) int k, l; float p, f, s;{\n"//
+// + " print(func(6));"//
+                    + "         p = 34;"//
+                    + "         f = 345;"//
+                    + "         s = p/f;"//
+                    + "         print (s);"//
     static String finalTypesTets = ""//
                     + "program Sample final int c_i = 11;  final float c_f = 11; final boolean c_b = 11;{ "//
 
