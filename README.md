@@ -1,5 +1,6 @@
-## MicroJava language implementation?
-The project have to be in the ~/GraalVMCourse/Source/trufflecourse/code
+## MicroJava language implementation? 
+
+##### The project have to be in the ~/GraalVMCourse/Source/trufflecourse/code
 ---
 ### WHAT WE HAVE DONE?
 So far (during the course and after it) we implemented:
